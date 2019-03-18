@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".Annotation">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="426dp"
+            android:layout_marginLeft="426dp"
+            android:layout_marginTop="273dp"
+            android:text="high arousal"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="9dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="272dp"
+            android:text="low arousal"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="423dp"
+            android:layout_marginLeft="423dp"
+            android:layout_marginTop="140dp"
+            android:text="very positive"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="142dp"
+            android:text="very negative"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/title_SAM"
+            android:layout_width="445dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="7dp"
+            android:text="Please input your emotion when watching the video"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="470dp"
+            android:layout_height="101dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="visible"
+            app:srcCompat="@mipmap/arousal" />
+
+        <RadioGroup
+            android:id="@+id/valence_RadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="75dp"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/valence_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/black_overlay"
+                android:visibility="visible" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:textColor="@color/black_overlay" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/imageView_valence"
+            android:layout_width="455dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:visibility="visible"
+            app:srcCompat="@mipmap/valence" />
+
+        <RadioGroup
+            android:id="@+id/arousal_RadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="78dp"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/arousal_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_07"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textColor="@color/black_overlay" />
+
+            <RadioButton
+                android:id="@+id/arousal_09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:textColor="@color/black_overlay" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="103dp"
+            android:layout_height="92dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="483dp"
+            android:layout_marginLeft="483dp"
+            android:layout_marginTop="35dp"
+            android:text="Next" />
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/fullscreen_content"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:keepScreenOn="true"
+                android:text=" "
+                android:textColor="#33b5e5"
+                android:textSize="50sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</FrameLayout>

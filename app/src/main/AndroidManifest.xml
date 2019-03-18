@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nl.cwi.dis.aro">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Aro"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Ending"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_ending"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name=".Annotation"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_annotation"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name=".VideoPlayer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_video_player"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity android:name=".FullscreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
