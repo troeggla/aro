@@ -39,7 +39,6 @@ public class Annotation extends AppCompatActivity {
     private final Handler mHideHandler = new Handler();
     private View mContentView;
 
-    private Button btn2;
     private RadioGroup valence_group;
     private RadioGroup arousal_group;
     private String valence = "";
@@ -97,6 +96,7 @@ public class Annotation extends AppCompatActivity {
             return false;
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,54 +115,62 @@ public class Annotation extends AppCompatActivity {
             }
         });
     }
+
+    @Override
     public void onResume(){
         super.onResume();
+
         Intent intent = getIntent();
+
         videoID = intent.getIntExtra("videoID", 0);
         final String user_name = intent.getStringExtra("user_name");
         final String user_age = intent.getStringExtra("user_age");
         final String user_gender = intent.getStringExtra("user_gender");
+
         annotation = intent.getStringExtra("annotation");
-        btn2 = findViewById(R.id.button2);
         valence_group = findViewById(R.id.valence_RadioGroup);
         arousal_group = findViewById(R.id.arousal_RadioGroup);
+
+        Button btn2 = findViewById(R.id.button2);
         btn2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                videoID = videoID+1;
-                if(valence_group.getCheckedRadioButtonId()!=-1)
-                {
+                videoID = videoID + 1;
+
+                if (valence_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(valence_group.getCheckedRadioButtonId());
                     valence = rb.getText().toString();
-                    annotation = annotation+valence+",";
+
+                    annotation = annotation + valence + ",";
+                } else {
+                    Toast.makeText(Annotation.this,"Please input a value for valence!", Toast.LENGTH_LONG).show();
                 }
-                else
-                    {Toast.makeText(Annotation.this,"Pleas input your valence!", Toast.LENGTH_LONG).show();}
-                if(arousal_group.getCheckedRadioButtonId()!=-1)
-                {
+
+                if (arousal_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(arousal_group.getCheckedRadioButtonId());
                     arousal = rb.getText().toString();
-                    annotation = annotation+arousal+"\n";
+
+                    annotation = annotation + arousal + "\n";
+                } else {
+                    Toast.makeText(Annotation.this,"Please input a value for arousal!", Toast.LENGTH_LONG).show();
                 }
-                else
-                {Toast.makeText(Annotation.this,"Pleas input your arousal!", Toast.LENGTH_LONG).show();}
-                if(valence_group.getCheckedRadioButtonId()!=-1&&arousal_group.getCheckedRadioButtonId()!=-1) {
+
+                if(valence_group.getCheckedRadioButtonId() != -1 && arousal_group.getCheckedRadioButtonId() != -1) {
+                    Intent i;
+
                     if (videoID < 12) {
-                        Intent i = new Intent(Annotation.this, VideoPlayer.class);
-                        i.putExtra("annotation", annotation);
+                        i = new Intent(Annotation.this, VideoPlayer.class);
                         i.putExtra("videoID", videoID);
-                        i.putExtra("user_name", user_name);
-                        i.putExtra("user_age", user_age);
-                        i.putExtra("user_gender", user_gender);
-                        startActivity(i);
                     } else {
-                        Intent i = new Intent(Annotation.this, Ending.class);
-                        i.putExtra("annotation", annotation);
-                        i.putExtra("user_name", user_name);
-                        i.putExtra("user_age", user_age);
-                        i.putExtra("user_gender", user_gender);
-                        startActivity(i);
+                        i = new Intent(Annotation.this, Ending.class);
                     }
+
+                    i.putExtra("annotation", annotation);
+                    i.putExtra("user_name", user_name);
+                    i.putExtra("user_age", user_age);
+                    i.putExtra("user_gender", user_gender);
+
+                    startActivity(i);
                 }
             }
         });

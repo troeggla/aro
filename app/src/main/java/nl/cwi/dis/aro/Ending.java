@@ -44,10 +44,9 @@ public class Ending extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
-    private String annotation;
-    private String file_name;
+
     private static final String LOG_TAG = "annotation";
-    private static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 44;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -103,17 +102,20 @@ public class Ending extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ending);
+
         Intent intent = getIntent();
-        annotation = intent.getStringExtra("annotation");
+
+        final String annotation = intent.getStringExtra("annotation");
         final String user_name = intent.getStringExtra("user_name");
         final String user_age=intent.getStringExtra("user_age");
         final String user_gender=intent.getStringExtra("user_gender");
-        file_name = user_name+"_"+user_age+"_"+user_gender;
-        this.writeDataToFile(file_name+".csv", annotation);
+
+        String file_name = user_name + "_" + user_age + "_" + user_gender + ".csv";
+        this.writeDataToFile(file_name, annotation);
+
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -180,18 +182,19 @@ public class Ending extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
-    private void writeDataToFile(String fname, String data) {
+
+    private void writeDataToFile(String name, String data) {
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File dataFile = new File(downloadDir, fname);
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(dataFile);
+        File dataFile = new File(downloadDir, name);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
             fileOutputStream.write(data.getBytes());
-            fileOutputStream.close();
         } catch (FileNotFoundException fnf) {
             Log.e(LOG_TAG, "File not found: " + fnf);
         } catch (IOException ioe) {
             Log.e(LOG_TAG, "IO Exception: " + ioe);
         }
+
         DownloadManager downloadManager = (DownloadManager) getApplicationContext().getSystemService(DOWNLOAD_SERVICE);
         downloadManager.addCompletedDownload(dataFile.getName(), dataFile.getName(), true, "text/plain", dataFile.getAbsolutePath(), dataFile.length(), true);
     }
