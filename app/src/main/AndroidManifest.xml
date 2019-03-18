@@ -15,18 +15,21 @@
             android:name=".Ending"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_ending"
+            android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".Annotation"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_annotation"
+            android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".VideoPlayer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_video_player"
+            android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
-        <activity android:name=".FullscreenActivity">
+        <activity android:name=".FullscreenActivity" android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -148,9 +148,6 @@ public class VideoPlayer extends AppCompatActivity {
     }
 
     public void onResume(){
-        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
         super.onResume();
         final VideoView videoView =findViewById(R.id.videoView);
         final VideoView videoView_pre =findViewById(R.id.videoView_pre);

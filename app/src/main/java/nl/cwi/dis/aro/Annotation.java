@@ -116,9 +116,6 @@ public class Annotation extends AppCompatActivity {
         });
     }
     public void onResume(){
-        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
         super.onResume();
         Intent intent = getIntent();
         videoID = intent.getIntExtra("videoID", 0);
