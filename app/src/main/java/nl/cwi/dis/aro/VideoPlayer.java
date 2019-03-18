@@ -30,6 +30,8 @@ import android.net.Uri;
 import java.lang.Math;
 import java.util.TimerTask;
 
+import nl.cwi.dis.aro.views.MyRockerView;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

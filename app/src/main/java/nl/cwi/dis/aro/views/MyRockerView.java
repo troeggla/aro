@@ -1,4 +1,4 @@
-package nl.cwi.dis.aro;
+package nl.cwi.dis.aro.views;
 
 import android.view.View;
 import android.view.MotionEvent;
@@ -17,6 +17,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.Color;
 import android.util.Log;
 import android.graphics.PixelFormat;
+
+import nl.cwi.dis.aro.R;
 
 public class MyRockerView extends View {
     private static final String TAG = "RockerView";

@@ -75,7 +75,7 @@
         android:layout_marginBottom="50dp"
         android:layout_marginLeft="100dp">
 
-        <nl.cwi.dis.aro.MyRockerView
+        <nl.cwi.dis.aro.views.MyRockerView
             android:id="@+id/rockerXY_View"
             android:layout_width="87dp"
             android:layout_height="87dp"
