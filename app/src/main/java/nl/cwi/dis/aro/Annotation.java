@@ -14,6 +14,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.io.File;
+
 import nl.cwi.dis.aro.extras.UserSession;
 
 /**
@@ -34,7 +36,6 @@ public class Annotation extends AppCompatActivity {
     private RadioGroup arousal_group;
     private String valence = "";
     private String arousal = "";
-    private String annotation = "";
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -100,7 +101,6 @@ public class Annotation extends AppCompatActivity {
         Intent intent = getIntent();
         final UserSession session = intent.getParcelableExtra("session");
 
-        annotation = intent.getStringExtra("annotation");
         valence_group = findViewById(R.id.valence_RadioGroup);
         arousal_group = findViewById(R.id.arousal_RadioGroup);
 
@@ -111,8 +111,6 @@ public class Annotation extends AppCompatActivity {
                 if (valence_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(valence_group.getCheckedRadioButtonId());
                     valence = rb.getText().toString();
-
-                    annotation = annotation + valence + ",";
                 } else {
                     Toast.makeText(Annotation.this,"Please input a value for valence!", Toast.LENGTH_LONG).show();
                 }
@@ -120,13 +118,19 @@ public class Annotation extends AppCompatActivity {
                 if (arousal_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(arousal_group.getCheckedRadioButtonId());
                     arousal = rb.getText().toString();
-
-                    annotation = annotation + arousal + "\n";
                 } else {
                     Toast.makeText(Annotation.this,"Please input a value for arousal!", Toast.LENGTH_LONG).show();
                 }
 
                 if(valence_group.getCheckedRadioButtonId() != -1 && arousal_group.getCheckedRadioButtonId() != -1) {
+                    session.addQuestionnaireResponse(
+                            Double.parseDouble(arousal),
+                            Double.parseDouble(valence)
+                    );
+
+                    File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    session.writeToFile(downloadDir);
+
                     session.incrementVideoIndex();
 
                     Log.d(LOG_TAG, "Incremented index: " + session.getVideoIndex());
