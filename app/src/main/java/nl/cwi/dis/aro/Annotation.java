@@ -127,16 +127,20 @@ public class Annotation extends AppCompatActivity {
                 }
 
                 if(valence_group.getCheckedRadioButtonId() != -1 && arousal_group.getCheckedRadioButtonId() != -1) {
-                    Intent videoIntent;
                     session.incrementVideoIndex();
+
+                    Log.d(LOG_TAG, "Incremented index: " + session.getVideoIndex());
+                    Log.d(LOG_TAG, "New video path: " + session.getCurrentVideoPath());
+
+                    Intent videoIntent;
 
                     if (session.getCurrentVideoPath() != null) {
                         videoIntent = new Intent(Annotation.this, VideoPlayer.class);
-                        videoIntent.putExtra("session", session);
                     } else {
                         videoIntent = new Intent(Annotation.this, Ending.class);
                     }
 
+                    videoIntent.putExtra("session", session);
                     startActivity(videoIntent);
                 }
             }
