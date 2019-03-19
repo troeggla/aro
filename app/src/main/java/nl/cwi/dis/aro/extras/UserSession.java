@@ -2,10 +2,18 @@ package nl.cwi.dis.aro.extras;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class UserSession implements Parcelable {
+    private static final String LOG_TAG = "UserSession";
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         @Override
         public UserSession createFromParcel(Parcel in) {
@@ -112,5 +120,23 @@ public class UserSession implements Parcelable {
 
     public void incrementVideoIndex() {
         this.videoIndex++;
+    }
+
+    public void writeToFile(File targetDir) {
+        String fileName = this.name + "_" + this.age + "_" + this.gender + ".csv";
+        File dataFile = new File(targetDir, fileName);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
+            fileOutputStream.write("timestamp,videoIndex,arousal,valence\n".getBytes());
+
+            for (Annotation a : this.annotations) {
+                String line = String.format(Locale.ENGLISH, "%.1f,%d,%.3f%.3f", a.timestamp, a.videoIndex, a.arousal, a.valence);
+                fileOutputStream.write(line.getBytes());
+            }
+        } catch (FileNotFoundException fnf) {
+            Log.e(LOG_TAG, "File not found: " + fnf);
+        } catch (IOException ioe) {
+            Log.e(LOG_TAG, "IO Exception: " + ioe);
+        }
     }
 }
