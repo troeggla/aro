@@ -28,6 +28,13 @@ public class UserAnnotation implements Parcelable {
         this.valence = valence;
     }
 
+    public UserAnnotation(int videoIndex, double arousal, double valence) {
+        this.timestamp = 0;
+        this.videoIndex = videoIndex;
+        this.arousal = arousal;
+        this.valence = valence;
+    }
+
     public UserAnnotation(Parcel in) {
         this.timestamp = in.readDouble();
         this.videoIndex = in.readInt();
