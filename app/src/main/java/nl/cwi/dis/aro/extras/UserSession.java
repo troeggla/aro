@@ -19,8 +19,17 @@ public class UserSession implements Parcelable {
     };
 
     private class Annotation {
-        int arousal;
-        int valence;
+        double timestamp;
+        int videoIndex;
+        double arousal;
+        double valence;
+
+        private Annotation(double timestamp, int videoIndex, double arousal, double valence) {
+            this.timestamp = timestamp;
+            this.videoIndex = videoIndex;
+            this.arousal = arousal;
+            this.valence = valence;
+        }
     }
 
     private String name;
@@ -80,8 +89,13 @@ public class UserSession implements Parcelable {
         return this.annotations;
     }
 
-    public void addAnnotation(Annotation annotation) {
-        this.annotations.add(annotation);
+    public void addAnnotation(double arousal, double valence) {
+        this.annotations.add(new Annotation(
+                System.currentTimeMillis() / 1000.0,
+                this.getVideoIndex(),
+                arousal,
+                valence
+        ));
     }
 
     public String getCurrentVideoPath() {
