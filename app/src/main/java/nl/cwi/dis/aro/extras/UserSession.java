@@ -83,4 +83,16 @@ public class UserSession implements Parcelable {
     public void addAnnotation(Annotation annotation) {
         this.annotations.add(annotation);
     }
+
+    public String getCurrentVideoPath() {
+        if (this.videoIndex >= this.videos.length) {
+            return null;
+        }
+
+        return this.videos[this.videoIndex];
+    }
+
+    public void incrementVideoIndex() {
+        this.videoIndex++;
+    }
 }
