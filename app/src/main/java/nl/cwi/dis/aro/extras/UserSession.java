@@ -5,16 +5,16 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class User implements Parcelable {
+public class UserSession implements Parcelable {
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
+        public UserSession createFromParcel(Parcel in) {
+            return new UserSession(in);
         }
 
         @Override
-        public User[] newArray(int size) {
-            return new User[size];
+        public UserSession[] newArray(int size) {
+            return new UserSession[size];
         }
     };
 
@@ -28,14 +28,14 @@ public class User implements Parcelable {
     private String gender;
     private ArrayList<Annotation> annotations;
 
-    public User(Parcel in) {
+    public UserSession(Parcel in) {
         this.name = in.readString();
         this.age = in.readInt();
         this.gender = in.readString();
         this.annotations = in.readArrayList(null);
     }
 
-    public User(String name, int age, String gender) {
+    public UserSession(String name, int age, String gender) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -53,6 +53,8 @@ public class User implements Parcelable {
         dest.writeInt(this.age);
         dest.writeString(this.gender);
         dest.writeList(this.annotations);
+        dest.writeStringArray(this.videos);
+        dest.writeInt(this.videoIndex);
     }
 
     public String getName() {
