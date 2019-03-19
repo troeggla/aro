@@ -68,32 +68,16 @@ public class UserSession implements Parcelable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getAge() {
         return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public ArrayList<Annotation> getAnnotations() {
         return this.annotations;
-    }
-
-    public void setAnnotations(ArrayList<Annotation> annotations) {
-        this.annotations = annotations;
     }
 
     public void addAnnotation(Annotation annotation) {
