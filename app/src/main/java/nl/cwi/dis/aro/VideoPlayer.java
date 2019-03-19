@@ -67,7 +67,6 @@ public class VideoPlayer extends AppCompatActivity {
     private double arousal = 5;
 
     private Context context = this;
-    private String logging_string = "";
     private TextView valence_txt;
     private TextView arousal_txt;
     private ImageView emoji;
@@ -182,7 +181,7 @@ public class VideoPlayer extends AppCompatActivity {
         final Timer logging =new java.util.Timer(true);
         final TimerTask task = new TimerTask() {
             public void run() {
-                logging_string = logging_string + valence + "," + arousal + "\n";
+                session.addAnnotation(arousal, valence);
             }
         };
 
@@ -197,7 +196,6 @@ public class VideoPlayer extends AppCompatActivity {
                 videoView.setVideoURI(uri);
                 videoView.start();
 
-                logging_string += String.format(Locale.ENGLISH, "%.1f\n", System.currentTimeMillis() / 1000.0);
                 logging.schedule(task,0,100);
             }
         });
@@ -212,8 +210,6 @@ public class VideoPlayer extends AppCompatActivity {
                 //start the video player
                 logging.cancel();
 
-                logging_string += String.format(Locale.ENGLISH, "%.1f", System.currentTimeMillis() / 1000.0);
-
                 videoView_after.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.INVISIBLE);
 
@@ -226,30 +222,13 @@ public class VideoPlayer extends AppCompatActivity {
         videoView_after.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                session.writeToFile(downloadDir);
 
-                String file_name = user_name + "_" + user_age + "_" + user_gender + "_" + session.getVideoIndex() + ".csv";
-                this.writeDataToFile(file_name, logging_string);
-
-                Intent annotationIntent = new Intent(VideoPlayer.this , Annotation.class);
+                Intent annotationIntent = new Intent(VideoPlayer.this, Annotation.class);
                 annotationIntent.putExtra("session", session);
 
                 startActivity(annotationIntent);
-            }
-
-            private void writeDataToFile(String fname, String data) {
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File dataFile = new File(downloadDir, fname);
-
-                try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-                    fileOutputStream.write(data.getBytes());
-                } catch (FileNotFoundException fnf) {
-                    Log.e(LOG_TAG, "File not found: " + fnf);
-                } catch (IOException ioe) {
-                    Log.e(LOG_TAG, "IO Exception: " + ioe);
-                }
-
-                DownloadManager downloadManager = (DownloadManager) getApplicationContext().getSystemService(DOWNLOAD_SERVICE);
-                downloadManager.addCompletedDownload(dataFile.getName(), dataFile.getName(), true, "text/plain", dataFile.getAbsolutePath(), dataFile.length(), true);
             }
         });
     }
@@ -317,7 +296,6 @@ public class VideoPlayer extends AppCompatActivity {
             @Override
             public void onFinish() {}
         });
-
 
         mRockerViewXY.setOnDistanceLevelListener(new MyRockerView.OnDistanceLevelListener() {
             @Override
