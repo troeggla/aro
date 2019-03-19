@@ -26,25 +26,11 @@ public class UserSession implements Parcelable {
         }
     };
 
-    private class Annotation {
-        double timestamp;
-        int videoIndex;
-        double arousal;
-        double valence;
-
-        private Annotation(double timestamp, int videoIndex, double arousal, double valence) {
-            this.timestamp = timestamp;
-            this.videoIndex = videoIndex;
-            this.arousal = arousal;
-            this.valence = valence;
-        }
-    }
-
     private String name;
     private int age;
     private String gender;
 
-    private ArrayList<Annotation> annotations;
+    private ArrayList<UserAnnotation> annotations;
     private ArrayList<String> videos;
     private int videoIndex;
 
@@ -52,7 +38,10 @@ public class UserSession implements Parcelable {
         this.name = in.readString();
         this.age = in.readInt();
         this.gender = in.readString();
-        this.annotations = in.readArrayList(null);
+
+        this.annotations = new ArrayList<>();
+        in.readTypedList(this.annotations, UserAnnotation.CREATOR);
+
         this.videos = in.readArrayList(null);
         this.videoIndex = in.readInt();
     }
@@ -76,7 +65,7 @@ public class UserSession implements Parcelable {
         dest.writeString(this.name);
         dest.writeInt(this.age);
         dest.writeString(this.gender);
-        dest.writeList(this.annotations);
+        dest.writeTypedList(this.annotations);
         dest.writeList(this.videos);
         dest.writeInt(this.videoIndex);
     }
@@ -93,12 +82,12 @@ public class UserSession implements Parcelable {
         return gender;
     }
 
-    public ArrayList<Annotation> getAnnotations() {
+    public ArrayList<UserAnnotation> getAnnotations() {
         return this.annotations;
     }
 
     public void addAnnotation(double arousal, double valence) {
-        this.annotations.add(new Annotation(
+        this.annotations.add(new UserAnnotation(
                 System.currentTimeMillis() / 1000.0,
                 this.getVideoIndex(),
                 arousal,
@@ -129,8 +118,13 @@ public class UserSession implements Parcelable {
         try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
             fileOutputStream.write("timestamp,videoIndex,arousal,valence\n".getBytes());
 
-            for (Annotation a : this.annotations) {
-                String line = String.format(Locale.ENGLISH, "%.1f,%d,%.3f%.3f", a.timestamp, a.videoIndex, a.arousal, a.valence);
+            for (UserAnnotation a : this.annotations) {
+                String line = String.format(
+                        Locale.ENGLISH,
+                        "%.1f,%d,%.3f,%.3f\n",
+                        a.getTimestamp(), a.getVideoIndex(), a.getArousal(), a.getValence()
+                );
+
                 fileOutputStream.write(line.getBytes());
             }
         } catch (FileNotFoundException fnf) {
