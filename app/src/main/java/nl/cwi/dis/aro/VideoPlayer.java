@@ -30,7 +30,10 @@ import android.net.Uri;
 import java.lang.Math;
 import java.util.TimerTask;
 
+import nl.cwi.dis.aro.extras.UserSession;
 import nl.cwi.dis.aro.views.MyRockerView;
+
+import static android.os.Environment.getExternalStorageDirectory;
 
 
 /**
@@ -158,10 +161,11 @@ public class VideoPlayer extends AppCompatActivity {
         //valence_txt.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
+        final UserSession session = intent.getParcelableExtra("session");
 
-        final int videoID = intent.getIntExtra("videoID", -1);
+        final String videoPath = session.getCurrentVideoPath();
+        Log.d(LOG_TAG, "Current video path: " + videoPath);
 
-        final String videopath = "android.resource://" + getPackageName() + "/" + (R.raw.video_1 + videoID);
         final String pre_play = "android.resource://" + getPackageName() + "/" + (R.raw.pre_play);
         final String after_play = "android.resource://" + getPackageName() + "/" + (R.raw.after_play);
 
@@ -189,7 +193,7 @@ public class VideoPlayer extends AppCompatActivity {
                 videoView_pre.setVisibility(View.INVISIBLE);
                 videoView.setVisibility(View.VISIBLE);
 
-                Uri uri = Uri.parse(videopath);
+                Uri uri = Uri.parse(videoPath);
                 videoView.setVideoURI(uri);
                 videoView.start();
 
@@ -198,10 +202,9 @@ public class VideoPlayer extends AppCompatActivity {
             }
         });
 
-        final String user_name = intent.getStringExtra("user_name");
-        final String user_age = intent.getStringExtra("user_age");
-        final String user_gender = intent.getStringExtra("user_gender");
-        final String annotation = intent.getStringExtra("annotation");
+        final String user_name = session.getName();
+        final int user_age = session.getAge();
+        final String user_gender = session.getGender();
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -223,17 +226,14 @@ public class VideoPlayer extends AppCompatActivity {
         videoView_after.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Intent i = new Intent(VideoPlayer.this , Annotation.class);
 
-                String file_name = user_name + "_" + user_age + "_" + user_gender + "_" + videoID + ".csv";
+                String file_name = user_name + "_" + user_age + "_" + user_gender + "_" + session.getVideoIndex() + ".csv";
                 this.writeDataToFile(file_name, logging_string);
 
-                i.putExtra("annotation", annotation);
-                i.putExtra("videoID", videoID);
-                i.putExtra("user_name", user_name);
-                i.putExtra("user_age", user_age);
-                i.putExtra("user_gender", user_gender);
-                startActivity(i);
+                Intent annotationIntent = new Intent(VideoPlayer.this , Annotation.class);
+                annotationIntent.putExtra("session", session);
+
+                startActivity(annotationIntent);
             }
 
             private void writeDataToFile(String fname, String data) {
