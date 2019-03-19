@@ -1,24 +1,25 @@
 package nl.cwi.dis.aro;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.content.Intent;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.widget.RadioButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.app.ActivityCompat;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.util.Log;
-import android.content.pm.ActivityInfo;
+
+import nl.cwi.dis.aro.extras.User;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -45,19 +46,9 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private View mContentView;
     private View mControlsView;
-    private boolean mVisible;
-
-    private EditText user_name_txt;
-    private EditText user_age_txt;
-    private RadioGroup user_gender_group;
-
-    private int videoID = 0;
-
-    private String user_gender = "";
-    private String annotation = "valence,arousal\n";
 
     private static final String LOG_TAG = "FullscreenActivity";
-    private static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 44;
+    private static final int STORAGE_PERMISSION_REQUEST = 44;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,39 +56,39 @@ public class FullscreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_fullscreen);
 
-        mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+        int writeStoragePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readStoragePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST);
+        if (writeStoragePermission != PackageManager.PERMISSION_GRANTED || readStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE },
+                    STORAGE_PERMISSION_REQUEST
+            );
         } else {
             Log.d(LOG_TAG, "Permission already granted");
         }
 
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
-        user_age_txt = findViewById(R.id.age_txt);
-        user_name_txt = findViewById(R.id.name_txt);
-        user_gender_group = findViewById(R.id.gender_group);
+        final EditText user_age_txt = findViewById(R.id.age_txt);
+        final EditText user_name_txt = findViewById(R.id.name_txt);
+        final RadioGroup user_gender_group = findViewById(R.id.gender_group);
 
         Button btn1 = findViewById(R.id.start_button);
 
         btn1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(FullscreenActivity.this , VideoPlayer.class);
+                Intent intent = new Intent(FullscreenActivity.this , VideoPlayer.class);
 
                 String user_name = user_name_txt.getText().toString().trim();
                 String user_age = user_age_txt.getText().toString().trim();
+
+                String user_gender = "";
 
                 if (user_gender_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(user_gender_group.getCheckedRadioButtonId());
@@ -111,19 +102,14 @@ public class FullscreenActivity extends AppCompatActivity {
                 } else if (user_gender.length() == 0) {
                     Toast.makeText(FullscreenActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
                 } else {
-                    i.putExtra("annotation", annotation);
-                    i.putExtra("user_name", user_name);
-                    i.putExtra("user_age", user_age);
-                    i.putExtra("user_gender", user_gender);
-                    i.putExtra("videoID", videoID);
+                    intent.putExtra("videoID", 0);
+                    intent.putExtra("user", new User(user_name, Integer.parseInt(user_age), user_gender));
 
-                    startActivity(i);
+                    startActivity(intent);
                 }
             }
         });
     }
-
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -150,14 +136,6 @@ public class FullscreenActivity extends AppCompatActivity {
         }
     };
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            hide();
-        }
-    }
-
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -165,7 +143,6 @@ public class FullscreenActivity extends AppCompatActivity {
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
-        mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
@@ -189,18 +166,6 @@ public class FullscreenActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
 
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
