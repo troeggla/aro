@@ -31,6 +31,7 @@ public class UserSession implements Parcelable {
     private String gender;
 
     private ArrayList<UserAnnotation> annotations;
+    private ArrayList<UserAnnotation> questionnaireResponses;
     private ArrayList<String> videos;
     private int videoIndex;
 
@@ -42,6 +43,9 @@ public class UserSession implements Parcelable {
         this.annotations = new ArrayList<>();
         in.readTypedList(this.annotations, UserAnnotation.CREATOR);
 
+        this.questionnaireResponses = new ArrayList<>();
+        in.readTypedList(this.questionnaireResponses, UserAnnotation.CREATOR);
+
         this.videos = in.readArrayList(null);
         this.videoIndex = in.readInt();
     }
@@ -51,6 +55,7 @@ public class UserSession implements Parcelable {
         this.age = age;
         this.gender = gender;
         this.annotations = new ArrayList<>();
+        this.questionnaireResponses = new ArrayList<>();
         this.videos = videos;
         this.videoIndex = 0;
     }
@@ -66,6 +71,7 @@ public class UserSession implements Parcelable {
         dest.writeInt(this.age);
         dest.writeString(this.gender);
         dest.writeTypedList(this.annotations);
+        dest.writeTypedList(this.questionnaireResponses);
         dest.writeList(this.videos);
         dest.writeInt(this.videoIndex);
     }
@@ -86,9 +92,21 @@ public class UserSession implements Parcelable {
         return this.annotations;
     }
 
+    public ArrayList<UserAnnotation> getQuestionnaireResponses() {
+        return this.questionnaireResponses;
+    }
+
     public void addAnnotation(double arousal, double valence) {
         this.annotations.add(new UserAnnotation(
                 System.currentTimeMillis() / 1000.0,
+                this.getVideoIndex(),
+                arousal,
+                valence
+        ));
+    }
+
+    public void addQuestionnaireResponse(double arousal, double valence) {
+        this.questionnaireResponses.add(new UserAnnotation(
                 this.getVideoIndex(),
                 arousal,
                 valence
