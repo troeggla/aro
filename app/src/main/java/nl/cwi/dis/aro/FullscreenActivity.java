@@ -2,13 +2,16 @@ package nl.cwi.dis.aro;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,7 +22,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import nl.cwi.dis.aro.extras.User;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import nl.cwi.dis.aro.extras.UserSession;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -72,6 +80,24 @@ public class FullscreenActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Permission already granted");
         }
 
+        final File[] videoFiles = this.readVideoDirectory();
+
+        if (videoFiles.length == 0) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Video directory")
+                    .setMessage("Place your video files into the Aro/ directory on your internal storage and restart the app")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finishAffinity();
+                            System.exit(0);
+                        }
+                    })
+                    .show();
+
+            return;
+        }
+
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         final EditText user_age_txt = findViewById(R.id.age_txt);
@@ -102,13 +128,46 @@ public class FullscreenActivity extends AppCompatActivity {
                 } else if (user_gender.length() == 0) {
                     Toast.makeText(FullscreenActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
                 } else {
-                    intent.putExtra("videoID", 0);
-                    intent.putExtra("user", new User(user_name, Integer.parseInt(user_age), user_gender));
+                    ArrayList<String> filenames = new ArrayList<>();
 
+                    for (File f : videoFiles) {
+                        filenames.add(f.getAbsolutePath());
+                    }
+
+                    UserSession session = new UserSession(
+                            user_name,
+                            Integer.parseInt(user_age),
+                            user_gender,
+                            filenames
+                    );
+
+                    intent.putExtra("session", session);
                     startActivity(intent);
                 }
             }
         });
+    }
+
+    private File[] readVideoDirectory() {
+        File storage = Environment.getExternalStorageDirectory();
+        File videoDir = new File(storage, getResources().getString(R.string.app_name) + "/");
+
+        if (!videoDir.exists()) {
+            Log.d(LOG_TAG, "Video directory does not exist");
+            Log.d(LOG_TAG, "Attempting to create directory: " + videoDir.mkdirs());
+
+            return new File[] {};
+        }
+
+        File[] videoFiles = videoDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".mp4");
+            }
+        });
+        Arrays.sort(videoFiles);
+
+        return videoFiles;
     }
 
     @Override
