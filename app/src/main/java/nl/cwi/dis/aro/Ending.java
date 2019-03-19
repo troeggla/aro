@@ -1,25 +1,15 @@
 package nl.cwi.dis.aro;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.util.Log;
-import java.io.FileOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import android.app.DownloadManager;
-import android.os.Environment;
+
+import nl.cwi.dis.aro.extras.UserSession;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -103,15 +93,13 @@ public class Ending extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ending);
 
-        Intent intent = getIntent();
+        UserSession session = getIntent().getParcelableExtra("session");
 
-        final String annotation = intent.getStringExtra("annotation");
-        final String user_name = intent.getStringExtra("user_name");
-        final String user_age=intent.getStringExtra("user_age");
-        final String user_gender=intent.getStringExtra("user_gender");
+        final String user_name = session.getName();
+        final int user_age = session.getAge();
+        final String user_gender = session.getGender();
 
         String file_name = user_name + "_" + user_age + "_" + user_gender + ".csv";
-        this.writeDataToFile(file_name, annotation);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -121,7 +109,7 @@ public class Ending extends AppCompatActivity {
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
            public void onClick(View view) {
-               toggle();
+               hide();
            }
         });
 
@@ -140,14 +128,6 @@ public class Ending extends AppCompatActivity {
         delayedHide(100);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            hide();
-        }
-    }
-
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -162,18 +142,6 @@ public class Ending extends AppCompatActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
-
     /**
      * Schedules a call to hide() in delay milliseconds, canceling any
      * previously scheduled calls.
@@ -181,21 +149,5 @@ public class Ending extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-
-    private void writeDataToFile(String name, String data) {
-        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File dataFile = new File(downloadDir, name);
-
-        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-            fileOutputStream.write(data.getBytes());
-        } catch (FileNotFoundException fnf) {
-            Log.e(LOG_TAG, "File not found: " + fnf);
-        } catch (IOException ioe) {
-            Log.e(LOG_TAG, "IO Exception: " + ioe);
-        }
-
-        DownloadManager downloadManager = (DownloadManager) getApplicationContext().getSystemService(DOWNLOAD_SERVICE);
-        downloadManager.addCompletedDownload(dataFile.getName(), dataFile.getName(), true, "text/plain", dataFile.getAbsolutePath(), dataFile.length(), true);
     }
 }
