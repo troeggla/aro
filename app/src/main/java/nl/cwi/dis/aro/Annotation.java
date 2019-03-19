@@ -2,21 +2,26 @@ package nl.cwi.dis.aro;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import nl.cwi.dis.aro.extras.UserSession;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class Annotation extends AppCompatActivity {
+    private final static String LOG_TAG = "Annotation";
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -60,7 +65,6 @@ public class Annotation extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    int videoID;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -73,6 +77,9 @@ public class Annotation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_annotation);
+
+        UserSession session = getIntent().getParcelableExtra("session");
+        Log.d(LOG_TAG, "Launched Annotation activity: " + session.getCurrentVideoPath());
 
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
@@ -91,11 +98,7 @@ public class Annotation extends AppCompatActivity {
         super.onResume();
 
         Intent intent = getIntent();
-
-        videoID = intent.getIntExtra("videoID", 0);
-        final String user_name = intent.getStringExtra("user_name");
-        final String user_age = intent.getStringExtra("user_age");
-        final String user_gender = intent.getStringExtra("user_gender");
+        final UserSession session = intent.getParcelableExtra("session");
 
         annotation = intent.getStringExtra("annotation");
         valence_group = findViewById(R.id.valence_RadioGroup);
@@ -105,8 +108,6 @@ public class Annotation extends AppCompatActivity {
         btn2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                videoID = videoID + 1;
-
                 if (valence_group.getCheckedRadioButtonId() != -1) {
                     RadioButton rb = findViewById(valence_group.getCheckedRadioButtonId());
                     valence = rb.getText().toString();
@@ -126,26 +127,23 @@ public class Annotation extends AppCompatActivity {
                 }
 
                 if(valence_group.getCheckedRadioButtonId() != -1 && arousal_group.getCheckedRadioButtonId() != -1) {
-                    Intent i;
+                    Intent videoIntent;
+                    session.incrementVideoIndex();
 
-                    if (videoID < 12) {
-                        i = new Intent(Annotation.this, VideoPlayer.class);
-                        i.putExtra("videoID", videoID);
+                    if (session.getCurrentVideoPath() != null) {
+                        videoIntent = new Intent(Annotation.this, VideoPlayer.class);
+                        videoIntent.putExtra("session", session);
                     } else {
-                        i = new Intent(Annotation.this, Ending.class);
+                        videoIntent = new Intent(Annotation.this, Ending.class);
                     }
 
-                    i.putExtra("annotation", annotation);
-                    i.putExtra("user_name", user_name);
-                    i.putExtra("user_age", user_age);
-                    i.putExtra("user_gender", user_gender);
-
-                    startActivity(i);
+                    startActivity(videoIntent);
                 }
             }
         });
 
     }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
