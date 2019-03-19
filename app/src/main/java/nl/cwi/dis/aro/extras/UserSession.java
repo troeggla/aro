@@ -26,20 +26,27 @@ public class UserSession implements Parcelable {
     private String name;
     private int age;
     private String gender;
+
     private ArrayList<Annotation> annotations;
+    private String[] videos;
+    private int videoIndex;
 
     public UserSession(Parcel in) {
         this.name = in.readString();
         this.age = in.readInt();
         this.gender = in.readString();
         this.annotations = in.readArrayList(null);
+        in.readStringArray(this.videos);
+        this.videoIndex = in.readInt();
     }
 
-    public UserSession(String name, int age, String gender) {
+    public UserSession(String name, int age, String gender, String[] videos) {
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.annotations = new ArrayList<>();
+        this.videos = videos;
+        this.videoIndex = 0;
     }
 
     @Override
