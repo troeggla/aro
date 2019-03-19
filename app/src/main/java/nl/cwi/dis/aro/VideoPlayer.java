@@ -1,7 +1,6 @@
 package nl.cwi.dis.aro;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
@@ -11,9 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Timer;
 
@@ -32,9 +28,6 @@ import java.util.TimerTask;
 
 import nl.cwi.dis.aro.extras.UserSession;
 import nl.cwi.dis.aro.views.MyRockerView;
-
-import static android.os.Environment.getExternalStorageDirectory;
-
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -199,10 +192,6 @@ public class VideoPlayer extends AppCompatActivity {
                 logging.schedule(task,0,100);
             }
         });
-
-        final String user_name = session.getName();
-        final int user_age = session.getAge();
-        final String user_gender = session.getGender();
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
