@@ -28,7 +28,7 @@ public class UserSession implements Parcelable {
     private String gender;
 
     private ArrayList<Annotation> annotations;
-    private String[] videos;
+    private ArrayList<String> videos;
     private int videoIndex;
 
     public UserSession(Parcel in) {
@@ -36,11 +36,11 @@ public class UserSession implements Parcelable {
         this.age = in.readInt();
         this.gender = in.readString();
         this.annotations = in.readArrayList(null);
-        in.readStringArray(this.videos);
+        this.videos = in.readArrayList(null);
         this.videoIndex = in.readInt();
     }
 
-    public UserSession(String name, int age, String gender, String[] videos) {
+    public UserSession(String name, int age, String gender, ArrayList<String> videos) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -60,7 +60,7 @@ public class UserSession implements Parcelable {
         dest.writeInt(this.age);
         dest.writeString(this.gender);
         dest.writeList(this.annotations);
-        dest.writeStringArray(this.videos);
+        dest.writeList(this.videos);
         dest.writeInt(this.videoIndex);
     }
 
@@ -85,11 +85,15 @@ public class UserSession implements Parcelable {
     }
 
     public String getCurrentVideoPath() {
-        if (this.videoIndex >= this.videos.length) {
+        if (this.videoIndex >= this.videos.size()) {
             return null;
         }
 
-        return this.videos[this.videoIndex];
+        return this.videos.get(this.videoIndex);
+    }
+
+    public int getVideoIndex() {
+        return videoIndex;
     }
 
     public void incrementVideoIndex() {
