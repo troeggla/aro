@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class UserAnnotation implements Parcelable {
     private double timestamp;
-    private int videoIndex;
+    private String videoName;
     private double arousal;
     private double valence;
 
@@ -21,23 +21,23 @@ public class UserAnnotation implements Parcelable {
         }
     };
 
-    public UserAnnotation(double timestamp, int videoIndex, double arousal, double valence) {
+    public UserAnnotation(double timestamp, String videoName, double arousal, double valence) {
         this.timestamp = timestamp;
-        this.videoIndex = videoIndex;
+        this.videoName = videoName;
         this.arousal = arousal;
         this.valence = valence;
     }
 
-    public UserAnnotation(int videoIndex, double arousal, double valence) {
+    public UserAnnotation(String videoName, double arousal, double valence) {
         this.timestamp = 0;
-        this.videoIndex = videoIndex;
+        this.videoName = videoName;
         this.arousal = arousal;
         this.valence = valence;
     }
 
     public UserAnnotation(Parcel in) {
         this.timestamp = in.readDouble();
-        this.videoIndex = in.readInt();
+        this.videoName = in.readString();
         this.arousal = in.readDouble();
         this.valence = in.readDouble();
     }
@@ -50,7 +50,7 @@ public class UserAnnotation implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(this.timestamp);
-        dest.writeInt(this.videoIndex);
+        dest.writeString(this.videoName);
         dest.writeDouble(this.arousal);
         dest.writeDouble(this.valence);
     }
@@ -67,7 +67,8 @@ public class UserAnnotation implements Parcelable {
         return valence;
     }
 
-    public int getVideoIndex() {
-        return videoIndex;
+    public String getVideoName() {
+        String[] path = this.videoName.split("/");
+        return path[path.length - 1];
     }
 }

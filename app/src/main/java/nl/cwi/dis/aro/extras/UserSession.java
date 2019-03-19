@@ -99,7 +99,7 @@ public class UserSession implements Parcelable {
     public void addAnnotation(double arousal, double valence) {
         this.annotations.add(new UserAnnotation(
                 System.currentTimeMillis() / 1000.0,
-                this.getVideoIndex(),
+                this.videos.get(this.getVideoIndex()),
                 arousal,
                 valence
         ));
@@ -107,7 +107,7 @@ public class UserSession implements Parcelable {
 
     public void addQuestionnaireResponse(double arousal, double valence) {
         this.questionnaireResponses.add(new UserAnnotation(
-                this.getVideoIndex(),
+                this.videos.get(this.getVideoIndex()),
                 arousal,
                 valence
         ));
@@ -143,13 +143,13 @@ public class UserSession implements Parcelable {
         File dataFile = new File(targetDir, fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-            fileOutputStream.write("videoIndex,arousal,valence\n".getBytes());
+            fileOutputStream.write("videoName,arousal,valence\n".getBytes());
 
             for (UserAnnotation a : this.questionnaireResponses) {
                 String line = String.format(
                         Locale.ENGLISH,
-                        "%d,%.0f,%.0f\n",
-                        a.getVideoIndex(), a.getArousal(), a.getValence()
+                        "\"%s\",%.0f,%.0f\n",
+                        a.getVideoName(), a.getArousal(), a.getValence()
                 );
 
                 fileOutputStream.write(line.getBytes());
@@ -170,13 +170,13 @@ public class UserSession implements Parcelable {
         File dataFile = new File(targetDir, fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-            fileOutputStream.write("timestamp,videoIndex,arousal,valence\n".getBytes());
+            fileOutputStream.write("timestamp,videoName,arousal,valence\n".getBytes());
 
             for (UserAnnotation a : this.annotations) {
                 String line = String.format(
                         Locale.ENGLISH,
-                        "%.1f,%d,%.3f,%.3f\n",
-                        a.getTimestamp(), a.getVideoIndex(), a.getArousal(), a.getValence()
+                        "%.1f,\"%s\",%.3f,%.3f\n",
+                        a.getTimestamp(), a.getVideoName(), a.getArousal(), a.getValence()
                 );
 
                 fileOutputStream.write(line.getBytes());
