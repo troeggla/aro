@@ -33,7 +33,7 @@ import nl.cwi.dis.aro.views.MyRockerView;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class VideoPlayer extends AppCompatActivity {
+public class VideoPlayerActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -66,7 +66,7 @@ public class VideoPlayer extends AppCompatActivity {
     private ImageView back_ground;
     private MyRockerView mRockerViewXY;
 
-    private static final String LOG_TAG = "VideoPlayer";
+    private static final String LOG_TAG = "VideoPlayerActivity";
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -214,7 +214,7 @@ public class VideoPlayer extends AppCompatActivity {
                 File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 session.writeToFile(downloadDir);
 
-                Intent annotationIntent = new Intent(VideoPlayer.this, Annotation.class);
+                Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
                 annotationIntent.putExtra("session", session);
 
                 startActivity(annotationIntent);

@@ -1,20 +1,12 @@
 package nl.cwi.dis.aro;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
-
-import java.io.File;
 
 import nl.cwi.dis.aro.extras.UserSession;
 
@@ -22,8 +14,19 @@ import nl.cwi.dis.aro.extras.UserSession;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Annotation extends AppCompatActivity {
-    private final static String LOG_TAG = "Annotation";
+public class EndingActivity extends AppCompatActivity {
+    /**
+     * Whether or not the system UI should be auto-hidden after
+     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+     */
+    private static final boolean AUTO_HIDE = true;
+
+    /**
+     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -32,10 +35,7 @@ public class Annotation extends AppCompatActivity {
     private final Handler mHideHandler = new Handler();
     private View mContentView;
 
-    private RadioGroup valence_group;
-    private RadioGroup arousal_group;
-    private String valence = "";
-    private String arousal = "";
+    private static final String LOG_TAG = "annotation";
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -66,90 +66,56 @@ public class Annotation extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
+    private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
             hide();
         }
     };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_annotation);
+        setContentView(R.layout.activity_ending);
 
         UserSession session = getIntent().getParcelableExtra("session");
-        Log.d(LOG_TAG, "Launched Annotation activity: " + session.getCurrentVideoPath());
 
+        final String user_name = session.getName();
+        final int user_age = session.getAge();
+        final String user_gender = session.getGender();
+
+        String file_name = user_name + "_" + user_age + "_" + user_gender + ".csv";
+
+        mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                hide();
-            }
-        });
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        Intent intent = getIntent();
-        final UserSession session = intent.getParcelableExtra("session");
-
-        valence_group = findViewById(R.id.valence_RadioGroup);
-        arousal_group = findViewById(R.id.arousal_RadioGroup);
-
-        Button btn2 = findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                if (valence_group.getCheckedRadioButtonId() != -1) {
-                    RadioButton rb = findViewById(valence_group.getCheckedRadioButtonId());
-                    valence = rb.getText().toString();
-                } else {
-                    Toast.makeText(Annotation.this,"Please input a value for valence!", Toast.LENGTH_LONG).show();
-                }
-
-                if (arousal_group.getCheckedRadioButtonId() != -1) {
-                    RadioButton rb = findViewById(arousal_group.getCheckedRadioButtonId());
-                    arousal = rb.getText().toString();
-                } else {
-                    Toast.makeText(Annotation.this,"Please input a value for arousal!", Toast.LENGTH_LONG).show();
-                }
-
-                if(valence_group.getCheckedRadioButtonId() != -1 && arousal_group.getCheckedRadioButtonId() != -1) {
-                    session.addQuestionnaireResponse(
-                            Double.parseDouble(arousal),
-                            Double.parseDouble(valence)
-                    );
-
-                    File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    session.writeToFile(downloadDir);
-
-                    session.incrementVideoIndex();
-
-                    Log.d(LOG_TAG, "Incremented index: " + session.getVideoIndex());
-                    Log.d(LOG_TAG, "New video path: " + session.getCurrentVideoPath());
-
-                    Intent videoIntent;
-
-                    if (session.getCurrentVideoPath() != null) {
-                        videoIntent = new Intent(Annotation.this, VideoPlayer.class);
-                    } else {
-                        videoIntent = new Intent(Annotation.this, Ending.class);
-                    }
-
-                    videoIntent.putExtra("session", session);
-                    startActivity(videoIntent);
-                }
-            }
+           public void onClick(View view) {
+               hide();
+           }
         });
 
+        // Upon interacting with UI controls, delay any scheduled hide()
+        // operations to prevent the jarring behavior of controls going away
+        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -169,6 +135,7 @@ public class Annotation extends AppCompatActivity {
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
+        mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);

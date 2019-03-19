@@ -33,7 +33,7 @@ import nl.cwi.dis.aro.extras.UserSession;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -55,7 +55,7 @@ public class FullscreenActivity extends AppCompatActivity {
     private View mContentView;
     private View mControlsView;
 
-    private static final String LOG_TAG = "FullscreenActivity";
+    private static final String LOG_TAG = "MainActivity";
     private static final int STORAGE_PERMISSION_REQUEST = 44;
 
     @Override
@@ -109,7 +109,7 @@ public class FullscreenActivity extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(FullscreenActivity.this , VideoPlayer.class);
+                Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
 
                 String user_name = user_name_txt.getText().toString().trim();
                 String user_age = user_age_txt.getText().toString().trim();
@@ -122,11 +122,11 @@ public class FullscreenActivity extends AppCompatActivity {
                 }
 
                 if (user_name.length() == 0) {
-                    Toast.makeText(FullscreenActivity.this,"Please input your name!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Please input your name!", Toast.LENGTH_LONG).show();
                 } else if (user_age.length() == 0) {
-                    Toast.makeText(FullscreenActivity.this,"Please input your age!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Please input your age!", Toast.LENGTH_LONG).show();
                 } else if (user_gender.length() == 0) {
-                    Toast.makeText(FullscreenActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
                 } else {
                     ArrayList<String> filenames = new ArrayList<>();
 
