@@ -130,7 +130,43 @@ public class UserSession implements Parcelable {
     }
 
     public void writeToFile(File targetDir) {
-        String fileName = this.name + "_" + this.age + "_" + this.gender + ".csv";
+        this.writeRockerValuesToFile(targetDir);
+        this.writeQuestionnaireResponsesToFile(targetDir);
+    }
+
+    private void writeQuestionnaireResponsesToFile(File targetDir) {
+        if (this.questionnaireResponses.size() == 0) {
+            return;
+        }
+
+        String fileName = this.name + "_" + this.age + "_" + this.gender + "_questionnaire.csv";
+        File dataFile = new File(targetDir, fileName);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
+            fileOutputStream.write("videoIndex,arousal,valence\n".getBytes());
+
+            for (UserAnnotation a : this.questionnaireResponses) {
+                String line = String.format(
+                        Locale.ENGLISH,
+                        "%d,%.0f,%.0f\n",
+                        a.getVideoIndex(), a.getArousal(), a.getValence()
+                );
+
+                fileOutputStream.write(line.getBytes());
+            }
+        } catch (FileNotFoundException fnf) {
+            Log.e(LOG_TAG, "Questionnaire file not found: " + fnf);
+        } catch (IOException ioe) {
+            Log.e(LOG_TAG, "Questionnaire IO Exception: " + ioe);
+        }
+    }
+
+    private void writeRockerValuesToFile(File targetDir) {
+        if (this.annotations.size() == 0) {
+            return;
+        }
+
+        String fileName = this.name + "_" + this.age + "_" + this.gender + "_values.csv";
         File dataFile = new File(targetDir, fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
