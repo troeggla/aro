@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class UserSession implements Parcelable {
     private static final String LOG_TAG = "UserSession";
@@ -29,7 +30,6 @@ public class UserSession implements Parcelable {
     private String name;
     private int age;
     private String gender;
-
     private ArrayList<UserAnnotation> annotations;
     private ArrayList<UserAnnotation> questionnaireResponses;
     private ArrayList<String> videos;
@@ -129,62 +129,56 @@ public class UserSession implements Parcelable {
         this.videoIndex++;
     }
 
-    public void writeToFile(File targetDir) {
+    public void writeResponsesToFile(File targetDir) {
         this.writeRockerValuesToFile(targetDir);
         this.writeQuestionnaireResponsesToFile(targetDir);
     }
 
     private void writeQuestionnaireResponsesToFile(File targetDir) {
-        if (this.questionnaireResponses.size() == 0) {
-            return;
-        }
+        ArrayList<String> lines = this.questionnaireResponses.stream().map(a -> String.format(
+                Locale.ENGLISH,
+                "\"%s\",%.3f,%.3f\n",
+                a.getVideoName(), a.getArousal(), a.getValence()
+        )).collect(Collectors.toCollection(ArrayList::new));
 
-        String fileName = this.name + "_" + this.age + "_" + this.gender + "_questionnaire.csv";
-        File dataFile = new File(targetDir, fileName);
-
-        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-            fileOutputStream.write("videoName,arousal,valence\n".getBytes());
-
-            for (UserAnnotation a : this.questionnaireResponses) {
-                String line = String.format(
-                        Locale.ENGLISH,
-                        "\"%s\",%.0f,%.0f\n",
-                        a.getVideoName(), a.getArousal(), a.getValence()
-                );
-
-                fileOutputStream.write(line.getBytes());
-            }
-        } catch (FileNotFoundException fnf) {
-            Log.e(LOG_TAG, "Questionnaire file not found: " + fnf);
-        } catch (IOException ioe) {
-            Log.e(LOG_TAG, "Questionnaire IO Exception: " + ioe);
-        }
+        this.writeDataToFile(
+                String.format(Locale.ENGLISH, "%s_%d_%s_questionnaire.csv", this.name, this.age, this.gender),
+                targetDir,
+                "videoName,arousal,valence\n",
+                lines
+        );
     }
 
     private void writeRockerValuesToFile(File targetDir) {
-        if (this.annotations.size() == 0) {
+        ArrayList<String> lines = this.annotations.stream().map(a -> String.format(
+                Locale.ENGLISH,
+                "%.1f,\"%s\",%.3f,%.3f\n",
+                a.getTimestamp(), a.getVideoName(), a.getArousal(), a.getValence()
+        )).collect(Collectors.toCollection(ArrayList::new));
+
+        this.writeDataToFile(
+                String.format(Locale.ENGLISH, "%s_%d_%s_values.csv", this.name, this.age, this.gender),
+                targetDir,
+                "timestamp,videoName,arousal,valence\n",
+                lines
+        );
+    }
+
+    private void writeDataToFile(String filename, File targetDir, String header, ArrayList<String> lines) {
+        if (lines.size() == 0) {
             return;
         }
 
-        String fileName = this.name + "_" + this.age + "_" + this.gender + "_values.csv";
-        File dataFile = new File(targetDir, fileName);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(new File(targetDir, filename))) {
+            fileOutputStream.write(header.getBytes());
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(dataFile)) {
-            fileOutputStream.write("timestamp,videoName,arousal,valence\n".getBytes());
-
-            for (UserAnnotation a : this.annotations) {
-                String line = String.format(
-                        Locale.ENGLISH,
-                        "%.1f,\"%s\",%.3f,%.3f\n",
-                        a.getTimestamp(), a.getVideoName(), a.getArousal(), a.getValence()
-                );
-
+            for (String line : lines) {
                 fileOutputStream.write(line.getBytes());
             }
         } catch (FileNotFoundException fnf) {
-            Log.e(LOG_TAG, "File not found: " + fnf);
+            Log.e(LOG_TAG, "File " + filename + " not found: " + fnf);
         } catch (IOException ioe) {
-            Log.e(LOG_TAG, "IO Exception: " + ioe);
+            Log.e(LOG_TAG, "File " + filename + " IO Exception: " + ioe);
         }
     }
 }
