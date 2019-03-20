@@ -129,7 +129,7 @@ public class AnnotationActivity extends AppCompatActivity {
                     );
 
                     File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    session.writeToFile(downloadDir);
+                    session.writeResponsesToFile(downloadDir);
 
                     session.incrementVideoIndex();
 

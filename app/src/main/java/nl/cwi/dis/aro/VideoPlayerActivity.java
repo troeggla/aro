@@ -212,7 +212,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                session.writeToFile(downloadDir);
+                session.writeResponsesToFile(downloadDir);
 
                 Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
                 annotationIntent.putExtra("session", session);
