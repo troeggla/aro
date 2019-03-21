@@ -13,8 +13,6 @@ import nl.cwi.dis.aro.extras.UserSession;
  * status bar and navigation/system bar) with user interaction.
  */
 public class EndingActivity extends AppCompatActivity {
-    private static final String LOG_TAG = "AnnotationActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

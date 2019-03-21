@@ -1,7 +1,6 @@
 package nl.cwi.dis.aro;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -20,7 +18,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -57,12 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle("File system permissions")
                         .setMessage("The app needs access to external storage in order to function properly. Please restart the app and grant the permission.")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finishAffinity();
-                                System.exit(0);
-                            }
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                            finishAffinity();
+                            System.exit(0);
                         })
                         .show();
             }
@@ -76,12 +70,9 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Video directory")
                     .setMessage("Place your video files into the Aro/ directory on your external storage and restart the app")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finishAffinity();
-                            System.exit(0);
-                        }
+                    .setPositiveButton("OK", (dialogInterface, i) -> {
+                        finishAffinity();
+                        System.exit(0);
                     })
                     .show();
 
@@ -94,44 +85,41 @@ public class MainActivity extends AppCompatActivity {
 
         Button btn1 = findViewById(R.id.start_button);
 
-        btn1.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
+        btn1.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
 
-                String user_name = user_name_txt.getText().toString().trim();
-                String user_age = user_age_txt.getText().toString().trim();
+            String user_name = user_name_txt.getText().toString().trim();
+            String user_age = user_age_txt.getText().toString().trim();
 
-                String user_gender = "";
+            String user_gender = "";
 
-                if (user_gender_group.getCheckedRadioButtonId() != -1) {
-                    RadioButton rb = findViewById(user_gender_group.getCheckedRadioButtonId());
-                    user_gender = rb.getText().toString();
+            if (user_gender_group.getCheckedRadioButtonId() != -1) {
+                RadioButton rb = findViewById(user_gender_group.getCheckedRadioButtonId());
+                user_gender = rb.getText().toString();
+            }
+
+            if (user_name.length() == 0) {
+                Toast.makeText(MainActivity.this,"Please input your name!", Toast.LENGTH_LONG).show();
+            } else if (user_age.length() == 0) {
+                Toast.makeText(MainActivity.this,"Please input your age!", Toast.LENGTH_LONG).show();
+            } else if (user_gender.length() == 0) {
+                Toast.makeText(MainActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
+            } else {
+                ArrayList<String> filenames = new ArrayList<>();
+
+                for (File f : videoFiles) {
+                    filenames.add(f.getAbsolutePath());
                 }
 
-                if (user_name.length() == 0) {
-                    Toast.makeText(MainActivity.this,"Please input your name!", Toast.LENGTH_LONG).show();
-                } else if (user_age.length() == 0) {
-                    Toast.makeText(MainActivity.this,"Please input your age!", Toast.LENGTH_LONG).show();
-                } else if (user_gender.length() == 0) {
-                    Toast.makeText(MainActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
-                } else {
-                    ArrayList<String> filenames = new ArrayList<>();
+                UserSession session = new UserSession(
+                        user_name,
+                        Integer.parseInt(user_age),
+                        user_gender,
+                        filenames
+                );
 
-                    for (File f : videoFiles) {
-                        filenames.add(f.getAbsolutePath());
-                    }
-
-                    UserSession session = new UserSession(
-                            user_name,
-                            Integer.parseInt(user_age),
-                            user_gender,
-                            filenames
-                    );
-
-                    intent.putExtra("session", session);
-                    startActivity(intent);
-                }
+                intent.putExtra("session", session);
+                startActivity(intent);
             }
         });
     }
@@ -147,12 +135,7 @@ public class MainActivity extends AppCompatActivity {
             return new File[] {};
         }
 
-        File[] videoFiles = videoDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".mp4");
-            }
-        });
+        File[] videoFiles = videoDir.listFiles((dir, name) -> name.endsWith(".mp4"));
 
         Log.d(LOG_TAG, "Video files: " + videoFiles.length);
         Arrays.sort(videoFiles);

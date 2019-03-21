@@ -14,9 +14,7 @@ import java.util.Locale;
 import java.util.Timer;
 
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.media.MediaPlayer;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -34,18 +32,6 @@ import nl.cwi.dis.aro.views.MyRockerView;
  * status bar and navigation/system bar) with user interaction.
  */
 public class VideoPlayerActivity extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -97,26 +83,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    private final Runnable mHideRunnable = this::hide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,12 +97,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         mRockerViewXY = findViewById(R.id.rockerXY_View);
 
         VideoView videoView = findViewById(R.id.videoView);
-        videoView.setOnClickListener(new VideoView.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                hide();
-            }
-        });
+        videoView.setOnClickListener(view -> hide());
     }
 
     public void onResume(){
@@ -148,9 +110,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
         arousal_txt = findViewById(R.id.arousal_txt);
         valence_txt = findViewById(R.id.valence_txt);
         back_ground = findViewById(R.id.imageView2);
-
-        //arousal_txt.setVisibility(View.INVISIBLE);
-        //valence_txt.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
         final UserSession session = intent.getParcelableExtra("session");
@@ -178,47 +137,38 @@ public class VideoPlayerActivity extends AppCompatActivity {
             }
         };
 
-        videoView_pre.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                //start the video player
-                videoView_pre.setVisibility(View.INVISIBLE);
-                videoView.setVisibility(View.VISIBLE);
+        videoView_pre.setOnCompletionListener(mp -> {
+            //start the video player
+            videoView_pre.setVisibility(View.INVISIBLE);
+            videoView.setVisibility(View.VISIBLE);
 
-                Uri uri = Uri.parse(videoPath);
-                videoView.setVideoURI(uri);
-                videoView.start();
+            Uri uri = Uri.parse(videoPath);
+            videoView.setVideoURI(uri);
+            videoView.start();
 
-                logging.schedule(task,0,100);
-            }
+            logging.schedule(task,0,100);
         });
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                //start the video player
-                logging.cancel();
+        videoView.setOnCompletionListener(mp -> {
+            //start the video player
+            logging.cancel();
 
-                videoView_after.setVisibility(View.VISIBLE);
-                videoView.setVisibility(View.INVISIBLE);
+            videoView_after.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.INVISIBLE);
 
-                Uri uri = Uri.parse(after_play);
-                videoView_after.setVideoURI(uri);
-                videoView_after.start();
-            }
+            Uri uri = Uri.parse(after_play);
+            videoView_after.setVideoURI(uri);
+            videoView_after.start();
         });
 
-        videoView_after.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                session.writeResponsesToFile(downloadDir);
+        videoView_after.setOnCompletionListener(mp -> {
+            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            session.writeResponsesToFile(downloadDir);
 
-                Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
-                annotationIntent.putExtra("session", session);
+            Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
+            annotationIntent.putExtra("session", session);
 
-                startActivity(annotationIntent);
-            }
+            startActivity(annotationIntent);
         });
     }
 
@@ -286,46 +236,43 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onFinish() {}
         });
 
-        mRockerViewXY.setOnDistanceLevelListener(new MyRockerView.OnDistanceLevelListener() {
-            @Override
-            public void onDistanceLevel(int level_) {
-                level = level_;
+        mRockerViewXY.setOnDistanceLevelListener(level_ -> {
+            level = level_;
 
-                valence = level * Math.cos(angle) + 5;
-                arousal = -level * Math.sin(angle) + 5;
+            valence = level * Math.cos(angle) + 5;
+            arousal = -level * Math.sin(angle) + 5;
 
-                valence = (valence > 9) ? 9 : (valence < 1) ? 1 : valence;
-                arousal = (arousal > 9) ? 9 : (arousal < 1) ? 1 : arousal;
+            valence = (valence > 9) ? 9 : (valence < 1) ? 1 : valence;
+            arousal = (arousal > 9) ? 9 : (arousal < 1) ? 1 : arousal;
 
-                valence_txt.setText(String.format(Locale.ENGLISH, "%.1f", valence));
-                arousal_txt.setText(String.format(Locale.ENGLISH, "%.1f", arousal));
+            valence_txt.setText(String.format(Locale.ENGLISH, "%.1f", valence));
+            arousal_txt.setText(String.format(Locale.ENGLISH, "%.1f", arousal));
 
-                if (valence > 5) {
-                    back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_p));
-                } else if (valence < 5) {
-                    back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_n));
-                }
-
-                emoji = findViewById(R.id.emoji_image);
-
-                if (level_ <= 6 && level_ > 5) {
-                    adjustBox(110);
-                } else if (level_ <= 5 && level_ > 4) {
-                    adjustBox(100);
-                } else if (level_ <= 4 && level_ > 3) {
-                    adjustBox(90);
-                } else if (level_ <= 3 && level_ > 2) {
-                    adjustBox(80);
-                } else if (level_ <= 2 && level_ > 1) {
-                    adjustBox(70);
-                } else if (level_ <= 1 && level_ >= 0) {
-                    adjustBox(60);
-                } else {
-                    adjustBox(70);
-                }
-
-                emoji.setImageDrawable(getResources().getDrawable(R.drawable.neutral_face));
+            if (valence > 5) {
+                back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_p));
+            } else if (valence < 5) {
+                back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_n));
             }
+
+            emoji = findViewById(R.id.emoji_image);
+
+            if (level_ <= 6 && level_ > 5) {
+                adjustBox(110);
+            } else if (level_ <= 5 && level_ > 4) {
+                adjustBox(100);
+            } else if (level_ <= 4 && level_ > 3) {
+                adjustBox(90);
+            } else if (level_ <= 3 && level_ > 2) {
+                adjustBox(80);
+            } else if (level_ <= 2 && level_ > 1) {
+                adjustBox(70);
+            } else if (level_ <= 1 && level_ >= 0) {
+                adjustBox(60);
+            } else {
+                adjustBox(70);
+            }
+
+            emoji.setImageDrawable(getResources().getDrawable(R.drawable.neutral_face));
         });
     }
 

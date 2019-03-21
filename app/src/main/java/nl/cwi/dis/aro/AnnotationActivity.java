@@ -5,7 +5,6 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 
@@ -33,36 +32,33 @@ public class AnnotationActivity extends AppCompatActivity {
         final SeekBar arousalSlider = findViewById(R.id.seekBar_arousal);
 
         Button btn2 = findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                int valence = valenceSlider.getProgress() + 1;
-                int arousal = arousalSlider.getProgress() + 1;
+        btn2.setOnClickListener(v -> {
+            int valence = valenceSlider.getProgress() + 1;
+            int arousal = arousalSlider.getProgress() + 1;
 
-                session.addQuestionnaireResponse(
-                        arousal,
-                        valence
-                );
+            session.addQuestionnaireResponse(
+                    arousal,
+                    valence
+            );
 
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                session.writeResponsesToFile(downloadDir);
+            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            session.writeResponsesToFile(downloadDir);
 
-                session.incrementVideoIndex();
+            session.incrementVideoIndex();
 
-                Log.d(LOG_TAG, "Incremented index: " + session.getVideoIndex());
-                Log.d(LOG_TAG, "New video path: " + session.getCurrentVideoPath());
+            Log.d(LOG_TAG, "Incremented index: " + session.getVideoIndex());
+            Log.d(LOG_TAG, "New video path: " + session.getCurrentVideoPath());
 
-                Intent videoIntent;
+            Intent videoIntent;
 
-                if (session.getCurrentVideoPath() != null) {
-                    videoIntent = new Intent(AnnotationActivity.this, VideoPlayerActivity.class);
-                } else {
-                    videoIntent = new Intent(AnnotationActivity.this, EndingActivity.class);
-                }
-
-                videoIntent.putExtra("session", session);
-                startActivity(videoIntent);
+            if (session.getCurrentVideoPath() != null) {
+                videoIntent = new Intent(AnnotationActivity.this, VideoPlayerActivity.class);
+            } else {
+                videoIntent = new Intent(AnnotationActivity.this, EndingActivity.class);
             }
+
+            videoIntent.putExtra("session", session);
+            startActivity(videoIntent);
         });
     }
 }
