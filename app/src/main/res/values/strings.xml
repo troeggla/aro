@@ -2,8 +2,8 @@
     <string name="app_name">Aro</string>
 
     <string name="title_activity_video_player">VideoPlayer</string>
-    <string name="title_activity_annotation">Annotation</string>
-    <string name="title_activity_ending">Ending</string>
+    <string name="title_activity_annotation">Questionnaire</string>
+    <string name="title_activity_ending">Thank You</string>
     <string name="title_activity_main">Main</string>
 
     <string name="welcome">Welcome to Aro!</string>
@@ -28,4 +28,6 @@
     <string name="low_arousal">low arousal</string>
     <string name="very_positive">very positive</string>
     <string name="very_negative">very negative</string>
+    <string name="thank_you">Thank you very much!</string>
+    <string name="return_phone">Please give this phone back to the experimenter</string>
 </resources>
