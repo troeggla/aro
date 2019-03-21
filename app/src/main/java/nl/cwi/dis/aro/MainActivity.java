@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -35,27 +36,46 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        int writeStoragePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int readStoragePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if (writeStoragePermission != PackageManager.PERMISSION_GRANTED || readStoragePermission != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE },
                     STORAGE_PERMISSION_REQUEST
             );
-
-            return;
         } else {
             Log.d(LOG_TAG, "Permission already granted");
+            this.setupUI();
         }
+    }
 
-        final File[] videoFiles = this.readVideoDirectory();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == STORAGE_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.setupUI();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("File system permissions")
+                        .setMessage("The app needs access to external storage in order to function properly. Please restart the app and grant the permission.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finishAffinity();
+                                System.exit(0);
+                            }
+                        })
+                        .show();
+            }
+        }
+    }
+
+    private void setupUI() {
+        File[] videoFiles = this.readVideoDirectory();
 
         if (videoFiles.length == 0) {
             new AlertDialog.Builder(this)
                     .setTitle("Video directory")
-                    .setMessage("Place your video files into the Aro/ directory on your internal storage and restart the app")
+                    .setMessage("Place your video files into the Aro/ directory on your external storage and restart the app")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
