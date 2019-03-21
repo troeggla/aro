@@ -21,4 +21,11 @@
     <string name="pensive">😔</string>
     <string name="relieved">😌</string>
     <string name="smile">😄</string>
+
+    <string name="classify_your_emotion">Please classify the emotion you felt while watching the video</string>
+    <string name="next">Next</string>
+    <string name="high_arousal">high arousal</string>
+    <string name="low_arousal">low arousal</string>
+    <string name="very_positive">very positive</string>
+    <string name="very_negative">very negative</string>
 </resources>
