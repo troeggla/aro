@@ -1,263 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     tools:context=".AnnotationActivity">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/annotationConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="426dp"
-            android:layout_marginLeft="426dp"
-            android:layout_marginTop="273dp"
-            android:text="high arousal"
+            android:text="@string/high_arousal"
             android:textColor="@color/colorAccent"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar_arousal"
+            app:layout_constraintTop_toTopOf="@+id/seekBar_arousal"
+            app:layout_constraintStart_toEndOf="@+id/seekBar_arousal" />
 
         <TextView
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="272dp"
-            android:text="low arousal"
+            android:text="@string/low_arousal"
             android:textColor="@color/design_default_color_primary"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar_arousal"
+            app:layout_constraintEnd_toStartOf="@+id/seekBar_arousal"
+            app:layout_constraintTop_toTopOf="@+id/seekBar_arousal" />
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="423dp"
-            android:layout_marginLeft="423dp"
-            android:layout_marginTop="140dp"
-            android:text="very positive"
+            android:text="@string/very_positive"
             android:textColor="@color/colorAccent"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar_valence"
+            app:layout_constraintTop_toTopOf="@+id/seekBar_valence"
+            app:layout_constraintStart_toEndOf="@+id/seekBar_valence" />
 
         <TextView
+            android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="142dp"
-            android:text="very negative"
+            android:text="@string/very_negative"
             android:textColor="@color/design_default_color_primary"
-            android:textSize="12sp" />
-
-    </RelativeLayout>
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar_valence"
+            app:layout_constraintEnd_toStartOf="@+id/seekBar_valence"
+            app:layout_constraintTop_toTopOf="@+id/seekBar_valence" />
 
         <TextView
             android:id="@+id/title_SAM"
-            android:layout_width="445dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="7dp"
-            android:text="Please input your emotion when watching the video"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="470dp"
-            android:layout_height="101dp"
-            android:layout_marginLeft="10dp"
-            android:visibility="visible"
-            app:srcCompat="@mipmap/arousal" />
-
-        <RadioGroup
-            android:id="@+id/valence_RadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/classify_your_emotion"
+            android:padding="5sp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <Space
-                android:layout_width="75dp"
-                android:layout_height="wrap_content" />
-
-            <RadioButton
-                android:id="@+id/valence_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="@color/black_overlay"
-                android:visibility="visible" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="7"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="9"
-                android:textColor="@color/black_overlay" />
-        </RadioGroup>
+        <ImageView
+            android:id="@+id/imageView_arousal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_SAM"
+            app:srcCompat="@mipmap/arousal" />
 
         <ImageView
             android:id="@+id/imageView_valence"
-            android:layout_width="455dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="20dp"
-            android:visibility="visible"
-            app:srcCompat="@mipmap/valence" />
-
-        <RadioGroup
-            android:id="@+id/arousal_RadioGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Space
-                android:layout_width="78dp"
-                android:layout_height="wrap_content" />
-
-            <RadioButton
-                android:id="@+id/arousal_01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_04"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_05"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_06"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_07"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="7"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_08"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8"
-                android:textColor="@color/black_overlay" />
-
-            <RadioButton
-                android:id="@+id/arousal_09"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="9"
-                android:textColor="@color/black_overlay" />
-        </RadioGroup>
-
-    </LinearLayout>
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_arousal"
+            app:srcCompat="@mipmap/valence" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="103dp"
-            android:layout_height="92dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="483dp"
-            android:layout_marginLeft="483dp"
-            android:layout_marginTop="35dp"
-            android:text="Next" />
-    </RelativeLayout>
-</FrameLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar_valence" />
+
+        <SeekBar
+            android:id="@+id/seekBar_arousal"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="217dp"
+            android:layout_height="21dp"
+            android:max="8"
+            android:progress="4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_arousal"
+            app:layout_constraintStart_toStartOf="@+id/imageView_arousal"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_arousal" />
+
+        <SeekBar
+            android:id="@+id/seekBar_valence"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="217dp"
+            android:layout_height="21dp"
+            android:max="8"
+            android:progress="4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_valence"
+            app:layout_constraintStart_toStartOf="@+id/imageView_valence"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_valence" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
