@@ -190,22 +190,22 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 arousal_txt.setText(String.format(Locale.ENGLISH, "arousal = %.1f", arousal));
 
                 if (valence > 5) {
-                    back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_p));
+                    back_ground.setImageDrawable(getDrawable(R.drawable.b_p));
                 } else if (valence < 5) {
-                    back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_n));
+                    back_ground.setImageDrawable(getDrawable(R.drawable.b_n));
                 }
 
                 emoji = findViewById(R.id.emoji_image);
 
                 if(level > 1) {
                     if(angle < 1.57 && angle>=0) {
-                        emoji.setImageDrawable(getResources().getDrawable(R.drawable.relieved));
+                        emoji.setImageDrawable(getDrawable(R.drawable.relieved));
                     } else if (angle >= 1.57 && angle < 3.14) {
-                        emoji.setImageDrawable(getResources().getDrawable(R.drawable.pensive));
+                        emoji.setImageDrawable(getDrawable(R.drawable.pensive));
                     } else if (angle >= 3.14 && angle < 4.71) {
-                        emoji.setImageDrawable(getResources().getDrawable(R.drawable.angry));
+                        emoji.setImageDrawable(getDrawable(R.drawable.angry));
                     } else if (angle >= 4.71 && angle < 6.28) {
-                        emoji.setImageDrawable(getResources().getDrawable(R.drawable.smile));
+                        emoji.setImageDrawable(getDrawable(R.drawable.smile));
                     }
                 }
 
@@ -228,7 +228,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     arousal = 5;
 
                     emoji = findViewById(R.id.emoji_image);
-                    emoji.setImageDrawable(getResources().getDrawable(R.drawable.neutral_face));
+                    emoji.setImageDrawable(getDrawable(R.drawable.neutral_face));
                 }
             }
 
@@ -249,9 +249,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
             arousal_txt.setText(String.format(Locale.ENGLISH, "%.1f", arousal));
 
             if (valence > 5) {
-                back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_p));
+                back_ground.setImageDrawable(getDrawable(R.drawable.b_p));
             } else if (valence < 5) {
-                back_ground.setImageDrawable(getResources().getDrawable(R.drawable.b_n));
+                back_ground.setImageDrawable(getDrawable(R.drawable.b_n));
             }
 
             emoji = findViewById(R.id.emoji_image);
@@ -272,7 +272,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 adjustBox(70);
             }
 
-            emoji.setImageDrawable(getResources().getDrawable(R.drawable.neutral_face));
+            emoji.setImageDrawable(getDrawable(R.drawable.neutral_face));
         });
     }
 
@@ -282,7 +282,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        delayedHide();
     }
 
     private void hide() {
@@ -298,13 +298,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
+    private void delayedHide() {
         mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+        mHideHandler.postDelayed(mHideRunnable, 100);
     }
 
     private int dpToPx(Context context, float dp){
