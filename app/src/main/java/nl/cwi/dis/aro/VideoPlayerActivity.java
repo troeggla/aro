@@ -33,11 +33,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private double valence = 5;
     private double arousal = 5;
 
-    private Context context = this;
+    private int playbackIndex = 0;
+
     private TextView valence_txt;
     private TextView arousal_txt;
     private ImageView emoji;
-    private ImageView back_ground;
+    private ImageView borderFrame;
     private MyRockerView mRockerViewXY;
 
     @Override
@@ -46,6 +47,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
 
         mRockerViewXY = findViewById(R.id.rockerXY_View);
+        arousal_txt = findViewById(R.id.arousal_txt);
+        valence_txt = findViewById(R.id.valence_txt);
+        borderFrame = findViewById(R.id.borderFrame);
+
         this.hideSystemUI();
     }
 
@@ -53,12 +58,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
         super.onResume();
 
         final VideoView videoView = findViewById(R.id.videoView);
-        final VideoView videoView_pre = findViewById(R.id.videoView_pre);
-        final VideoView videoView_after = findViewById(R.id.videoView_after);
-
-        arousal_txt = findViewById(R.id.arousal_txt);
-        valence_txt = findViewById(R.id.valence_txt);
-        back_ground = findViewById(R.id.imageView2);
 
         Intent intent = getIntent();
         final UserSession session = intent.getParcelableExtra("session");
@@ -69,55 +68,49 @@ public class VideoPlayerActivity extends AppCompatActivity {
         final String pre_play = "android.resource://" + getPackageName() + "/" + (R.raw.pre_play);
         final String after_play = "android.resource://" + getPackageName() + "/" + (R.raw.after_play);
 
-        videoView_pre.setVisibility(View.VISIBLE);
-        videoView_after.setVisibility(View.INVISIBLE);
-        videoView.setVisibility(View.INVISIBLE);
-
-        //start the video player
         Uri uri_pre = Uri.parse(pre_play);
-        videoView_pre.setVideoURI(uri_pre);
-        videoView_pre.start();
+        videoView.setVideoURI(uri_pre);
+        videoView.start();
+
         initMyClick();
 
-        final Timer logging =new java.util.Timer(true);
+        final Timer loggingTimer = new java.util.Timer(true);
         final TimerTask task = new TimerTask() {
             public void run() {
                 session.addAnnotation(arousal, valence);
             }
         };
 
-        videoView_pre.setOnCompletionListener(mp -> {
-            //start the video player
-            videoView_pre.setVisibility(View.INVISIBLE);
-            videoView.setVisibility(View.VISIBLE);
-
-            Uri uri = Uri.parse(videoPath);
-            videoView.setVideoURI(uri);
-            videoView.start();
-
-            logging.schedule(task,0,100);
-        });
-
         videoView.setOnCompletionListener(mp -> {
-            //start the video player
-            logging.cancel();
+            if (playbackIndex == 0) {
+                videoView.stopPlayback();
 
-            videoView_after.setVisibility(View.VISIBLE);
-            videoView.setVisibility(View.INVISIBLE);
+                //start the video player
+                Uri uri = Uri.parse(videoPath);
+                videoView.setVideoURI(uri);
+                videoView.start();
 
-            Uri uri = Uri.parse(after_play);
-            videoView_after.setVideoURI(uri);
-            videoView_after.start();
-        });
+                loggingTimer.schedule(task, 0, 100);
 
-        videoView_after.setOnCompletionListener(mp -> {
-            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            session.writeResponsesToFile(downloadDir);
+                playbackIndex = 1;
+            } else if (playbackIndex == 1) {
+                loggingTimer.cancel();
+                videoView.stopPlayback();
 
-            Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
-            annotationIntent.putExtra("session", session);
+                Uri uri = Uri.parse(after_play);
+                videoView.setVideoURI(uri);
+                videoView.start();
 
-            startActivity(annotationIntent);
+                playbackIndex = 2;
+            } else if (playbackIndex == 2) {
+                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                session.writeResponsesToFile(downloadDir);
+
+                Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
+                annotationIntent.putExtra("session", session);
+
+                startActivity(annotationIntent);
+            }
         });
     }
 
@@ -139,9 +132,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 arousal_txt.setText(String.format(Locale.ENGLISH, "arousal = %.1f", arousal));
 
                 if (valence > 5) {
-                    back_ground.setImageDrawable(getDrawable(R.drawable.b_p));
+                    borderFrame.setImageDrawable(getDrawable(R.drawable.b_p));
                 } else if (valence < 5) {
-                    back_ground.setImageDrawable(getDrawable(R.drawable.b_n));
+                    borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
                 }
 
                 emoji = findViewById(R.id.emoji_image);
@@ -170,8 +163,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void direction(MyRockerView.Direction direction) {
-                back_ground = findViewById(R.id.imageView2);
-
                 if (direction == MyRockerView.Direction.DIRECTION_CENTER) {
                     valence = 5;
                     arousal = 5;
@@ -198,9 +189,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
             arousal_txt.setText(String.format(Locale.ENGLISH, "%.1f", arousal));
 
             if (valence > 5) {
-                back_ground.setImageDrawable(getDrawable(R.drawable.b_p));
+                borderFrame.setImageDrawable(getDrawable(R.drawable.b_p));
             } else if (valence < 5) {
-                back_ground.setImageDrawable(getDrawable(R.drawable.b_n));
+                borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
             }
 
             emoji = findViewById(R.id.emoji_image);
@@ -247,8 +238,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void adjustBox(int dp) {
         ViewGroup.LayoutParams lp = emoji.getLayoutParams();
 
-        lp.width = dpToPx(context, dp) ;
-        lp.height = dpToPx(context, dp) ;
+        lp.width = dpToPx(this, dp) ;
+        lp.height = dpToPx(this, dp) ;
 
         emoji.setLayoutParams(lp);
     }
