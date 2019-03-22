@@ -14,7 +14,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.VideoView;
 import android.net.Uri;
 
@@ -22,6 +21,7 @@ import java.lang.Math;
 import java.util.TimerTask;
 
 import nl.cwi.dis.aro.extras.UserSession;
+import nl.cwi.dis.aro.views.BorderFrame;
 import nl.cwi.dis.aro.views.MyRockerView;
 
 public class VideoPlayerActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private TextView valence_txt;
     private TextView arousal_txt;
     private TextView moodText;
-    private ImageView borderFrame;
+    private BorderFrame borderFrame;
     private MyRockerView mRockerViewXY;
 
     @Override
@@ -132,9 +132,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 arousal_txt.setText(String.format(Locale.ENGLISH, "arousal = %.1f", arousal));
 
                 if (valence > 5) {
-                    borderFrame.setImageDrawable(getDrawable(R.drawable.b_p));
+                    borderFrame.setFrameColor(255, 234, 137, 104);
                 } else if (valence < 5) {
-                    borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
+                    borderFrame.setFrameColor(255, 108, 170, 204);
                 }
 
                 if(level > 1) {
@@ -186,9 +186,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
             arousal_txt.setText(String.format(Locale.ENGLISH, "%.1f", arousal));
 
             if (valence > 5) {
-                borderFrame.setImageDrawable(getDrawable(R.drawable.b_p));
+                borderFrame.setFrameColor(255, 234, 137, 104);
             } else if (valence < 5) {
-                borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
+                borderFrame.setFrameColor(255, 108, 170, 204);
             }
 
             int textSize = 30;
