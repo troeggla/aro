@@ -21,6 +21,7 @@ public class BorderFrame extends View {
 
     public void setFrameColor(int a, int r, int g, int b) {
         paint.setColor(Color.argb(a, r, g, b));
+        invalidate();
     }
 
     @Override
