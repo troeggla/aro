@@ -15,12 +15,12 @@ public class BorderFrame extends View {
         super(context, attrs);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.rgb(255, 0, 0));
+        paint.setColor(Color.argb(0, 0, 0, 0));
         paint.setStyle(Paint.Style.STROKE);
     }
 
-    public void setFrameColor(int r, int g, int b) {
-        paint.setColor(Color.rgb(r, g, b));
+    public void setFrameColor(int a, int r, int g, int b) {
+        paint.setColor(Color.argb(a, r, g, b));
     }
 
     @Override
