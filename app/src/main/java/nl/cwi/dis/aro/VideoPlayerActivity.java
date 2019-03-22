@@ -1,6 +1,5 @@
 package nl.cwi.dis.aro;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -12,8 +11,8 @@ import java.util.Locale;
 import java.util.Timer;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.VideoView;
@@ -37,7 +36,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private TextView valence_txt;
     private TextView arousal_txt;
-    private ImageView emoji;
+    private TextView moodText;
     private ImageView borderFrame;
     private MyRockerView mRockerViewXY;
 
@@ -50,6 +49,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         arousal_txt = findViewById(R.id.arousal_txt);
         valence_txt = findViewById(R.id.valence_txt);
         borderFrame = findViewById(R.id.borderFrame);
+        moodText = findViewById(R.id.mood_text);
 
         this.hideSystemUI();
     }
@@ -72,7 +72,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         videoView.setVideoURI(uri_pre);
         videoView.start();
 
-        initMyClick();
+        this.initRocker();
 
         final Timer loggingTimer = new java.util.Timer(true);
         final TimerTask task = new TimerTask() {
@@ -114,7 +114,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         });
     }
 
-    private void initMyClick() {
+    private void initRocker() {
         mRockerViewXY.setOnAngleChangeListener(new MyRockerView.OnAngleChangeListener() {
             @Override
             public void onStart() {}
@@ -137,17 +137,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
                 }
 
-                emoji = findViewById(R.id.emoji_image);
-
                 if(level > 1) {
                     if(angle < 1.57 && angle>=0) {
-                        emoji.setImageDrawable(getDrawable(R.drawable.relieved));
+                        moodText.setText(R.string.relieved);
                     } else if (angle >= 1.57 && angle < 3.14) {
-                        emoji.setImageDrawable(getDrawable(R.drawable.pensive));
+                        moodText.setText(R.string.pensive);
                     } else if (angle >= 3.14 && angle < 4.71) {
-                        emoji.setImageDrawable(getDrawable(R.drawable.angry));
+                        moodText.setText(R.string.angry);
                     } else if (angle >= 4.71 && angle < 6.28) {
-                        emoji.setImageDrawable(getDrawable(R.drawable.smile));
+                        moodText.setText(R.string.smile);
                     }
                 }
 
@@ -167,8 +165,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     valence = 5;
                     arousal = 5;
 
-                    emoji = findViewById(R.id.emoji_image);
-                    emoji.setImageDrawable(getDrawable(R.drawable.neutral_face));
+                    moodText.setText(R.string.neutral);
                 }
             }
 
@@ -194,25 +191,22 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 borderFrame.setImageDrawable(getDrawable(R.drawable.b_n));
             }
 
-            emoji = findViewById(R.id.emoji_image);
+            int textSize = 30;
 
             if (level_ <= 6 && level_ > 5) {
-                adjustBox(110);
+                textSize = 55;
             } else if (level_ <= 5 && level_ > 4) {
-                adjustBox(100);
+                textSize = 50;
             } else if (level_ <= 4 && level_ > 3) {
-                adjustBox(90);
+                textSize = 45;
             } else if (level_ <= 3 && level_ > 2) {
-                adjustBox(80);
+                textSize = 40;
             } else if (level_ <= 2 && level_ > 1) {
-                adjustBox(70);
-            } else if (level_ <= 1 && level_ >= 0) {
-                adjustBox(60);
-            } else {
-                adjustBox(70);
+                textSize = 35;
             }
 
-            emoji.setImageDrawable(getDrawable(R.drawable.neutral_face));
+            moodText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            moodText.setText(R.string.neutral);
         });
     }
 
@@ -228,19 +222,5 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
-
-    private int dpToPx(Context context, float dp){
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    public void adjustBox(int dp) {
-        ViewGroup.LayoutParams lp = emoji.getLayoutParams();
-
-        lp.width = dpToPx(this, dp) ;
-        lp.height = dpToPx(this, dp) ;
-
-        emoji.setLayoutParams(lp);
     }
 }

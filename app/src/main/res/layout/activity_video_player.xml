@@ -25,7 +25,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorAccent"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/design_default_color_primary"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/valence_txt" />
 
@@ -66,14 +66,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/b_p" />
 
-    <ImageView
-        android:id="@+id/emoji_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.8"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        app:srcCompat="@mipmap/neutral_face"
+    <TextView
+        android:id="@+id/mood_text"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="30sp"
+        android:text="@string/neutral"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
