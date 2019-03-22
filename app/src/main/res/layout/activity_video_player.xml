@@ -39,6 +39,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/valence_txt" />
 
+    <nl.cwi.dis.aro.views.BorderFrame
+        android:id="@+id/borderFrame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <nl.cwi.dis.aro.views.MyRockerView
         android:id="@+id/rockerXY_View"
         android:layout_width="130dp"
@@ -53,18 +62,6 @@
         rocker:rockerCallBackMode="CALL_BACK_MODE_STATE_CHANGE"
         rocker:rockerScale="0.5"
         rocker:rockerSpeedLevel="7" />
-
-    <ImageView
-        android:id="@+id/borderFrame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.8"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/b_p" />
 
     <TextView
         android:id="@+id/mood_text"
