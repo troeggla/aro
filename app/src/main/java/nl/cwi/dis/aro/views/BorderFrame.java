@@ -1,11 +1,14 @@
 package nl.cwi.dis.aro.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import nl.cwi.dis.aro.R;
 
 public class BorderFrame extends View {
     private static final int DEFAULT_SIZE = 100;
@@ -17,6 +20,24 @@ public class BorderFrame extends View {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.argb(0, 0, 0, 0));
         paint.setStyle(Paint.Style.STROKE);
+
+        this.parseAttributes(context, attrs);
+    }
+
+    private void parseAttributes(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BorderFrame);
+
+        String hexColor = typedArray.getString(R.styleable.BorderFrame_color);
+        if (hexColor != null) {
+            paint.setColor(Color.parseColor(hexColor));
+        }
+
+        float alpha = typedArray.getFloat(R.styleable.BorderFrame_opacity, 0);
+        if (alpha >= 0 && alpha <= 1) {
+            paint.setAlpha((int)Math.floor(255 * alpha));
+        }
+
+        typedArray.recycle();
     }
 
     public void setFrameColor(int a, int r, int g, int b) {
