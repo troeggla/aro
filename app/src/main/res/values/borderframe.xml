@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BorderFrame">
-        <attr name="opacity" format="float" />
-        <attr name="color" format="string" />
+        <attr name="frameOpacity" format="float" />
+        <attr name="frameColor" format="string" />
     </declare-styleable>
 </resources>

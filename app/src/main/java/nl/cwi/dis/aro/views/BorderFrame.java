@@ -27,12 +27,12 @@ public class BorderFrame extends View {
     private void parseAttributes(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BorderFrame);
 
-        String hexColor = typedArray.getString(R.styleable.BorderFrame_color);
+        String hexColor = typedArray.getString(R.styleable.BorderFrame_frameColor);
         if (hexColor != null) {
             paint.setColor(Color.parseColor(hexColor));
         }
 
-        float alpha = typedArray.getFloat(R.styleable.BorderFrame_opacity, 0);
+        float alpha = typedArray.getFloat(R.styleable.BorderFrame_frameOpacity, 0);
         if (alpha >= 0 && alpha <= 1) {
             paint.setAlpha((int)Math.floor(255 * alpha));
         }
