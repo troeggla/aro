@@ -50,7 +50,7 @@ public class BorderFrame extends View {
                 height = heightSize;
                 break;
             case MeasureSpec.UNSPECIFIED:
-                width = DEFAULT_SIZE;
+                height = DEFAULT_SIZE;
         }
 
         setMeasuredDimension(width, height);
