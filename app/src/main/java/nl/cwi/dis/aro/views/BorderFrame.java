@@ -47,14 +47,10 @@ public class BorderFrame extends View {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = 0;
-        int height = 0;
+        int width, height;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         switch (widthMode) {
             case MeasureSpec.EXACTLY:
@@ -62,8 +58,12 @@ public class BorderFrame extends View {
                 width = widthSize;
                 break;
             case MeasureSpec.UNSPECIFIED:
+            default:
                 width = DEFAULT_SIZE;
         }
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         switch (heightMode) {
             case MeasureSpec.EXACTLY:
@@ -71,6 +71,7 @@ public class BorderFrame extends View {
                 height = heightSize;
                 break;
             case MeasureSpec.UNSPECIFIED:
+            default:
                 height = DEFAULT_SIZE;
         }
 
