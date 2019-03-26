@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import nl.cwi.dis.aro.extras.UserSession;
 
@@ -86,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         Button btn1 = findViewById(R.id.start_button);
 
         btn1.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
-
             String user_name = user_name_txt.getText().toString().trim();
             String user_age = user_age_txt.getText().toString().trim();
 
@@ -105,20 +104,16 @@ public class MainActivity extends AppCompatActivity {
             } else if (user_gender.length() == 0) {
                 Toast.makeText(MainActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
             } else {
-                ArrayList<String> filenames = new ArrayList<>();
-
-                for (File f : videoFiles) {
-                    filenames.add(f.getAbsolutePath());
-                }
-
                 UserSession session = new UserSession(
                         user_name,
                         Integer.parseInt(user_age),
                         user_gender,
-                        filenames
+                        Arrays.stream(videoFiles).map(File::getAbsolutePath).collect(Collectors.toCollection(ArrayList::new))
                 );
 
+                Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
                 intent.putExtra("session", session);
+
                 startActivity(intent);
             }
         });
