@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class UserSession implements Parcelable {
     private static final String LOG_TAG = "UserSession";
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<UserSession> CREATOR = new Parcelable.Creator<UserSession>() {
         @Override
         public UserSession createFromParcel(Parcel in) {
             return new UserSession(in);

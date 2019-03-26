@@ -9,7 +9,7 @@ public class UserAnnotation implements Parcelable {
     private double arousal;
     private double valence;
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<UserAnnotation> CREATOR = new Parcelable.Creator<UserAnnotation>() {
         @Override
         public UserAnnotation createFromParcel(Parcel in) {
             return new UserAnnotation(in);
