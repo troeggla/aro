@@ -35,7 +35,8 @@ public class UserSession implements Parcelable {
     private ArrayList<String> videos;
     private int videoIndex;
 
-    public UserSession(Parcel in) {
+    @SuppressWarnings("unchecked")
+    private UserSession(Parcel in) {
         this.name = in.readString();
         this.age = in.readInt();
         this.gender = in.readString();

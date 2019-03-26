@@ -21,21 +21,21 @@ public class UserAnnotation implements Parcelable {
         }
     };
 
-    public UserAnnotation(double timestamp, String videoName, double arousal, double valence) {
+    UserAnnotation(double timestamp, String videoName, double arousal, double valence) {
         this.timestamp = timestamp;
         this.videoName = videoName;
         this.arousal = arousal;
         this.valence = valence;
     }
 
-    public UserAnnotation(String videoName, double arousal, double valence) {
+    UserAnnotation(String videoName, double arousal, double valence) {
         this.timestamp = 0;
         this.videoName = videoName;
         this.arousal = arousal;
         this.valence = valence;
     }
 
-    public UserAnnotation(Parcel in) {
+    private UserAnnotation(Parcel in) {
         this.timestamp = in.readDouble();
         this.videoName = in.readString();
         this.arousal = in.readDouble();
@@ -55,19 +55,19 @@ public class UserAnnotation implements Parcelable {
         dest.writeDouble(this.valence);
     }
 
-    public double getTimestamp() {
+    double getTimestamp() {
         return timestamp;
     }
 
-    public double getArousal() {
+    double getArousal() {
         return arousal;
     }
 
-    public double getValence() {
+    double getValence() {
         return valence;
     }
 
-    public String getVideoName() {
+    String getVideoName() {
         String[] path = this.videoName.split("/");
         return path[path.length - 1];
     }
