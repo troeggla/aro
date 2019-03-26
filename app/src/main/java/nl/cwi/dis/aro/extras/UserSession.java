@@ -80,22 +80,6 @@ public class UserSession implements Parcelable {
         return name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public ArrayList<UserAnnotation> getAnnotations() {
-        return this.annotations;
-    }
-
-    public ArrayList<UserAnnotation> getQuestionnaireResponses() {
-        return this.questionnaireResponses;
-    }
-
     public void addAnnotation(double arousal, double valence) {
         this.annotations.add(new UserAnnotation(
                 System.currentTimeMillis() / 1000.0,
