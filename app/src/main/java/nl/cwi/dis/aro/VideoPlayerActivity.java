@@ -32,8 +32,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private double valence = 5;
     private double arousal = 5;
 
-    private int playbackIndex = 0;
-
     private TextView valence_txt;
     private TextView arousal_txt;
     private TextView moodText;
@@ -57,22 +55,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
-        final VideoView videoView = findViewById(R.id.videoView);
-
         Intent intent = getIntent();
         final UserSession session = intent.getParcelableExtra("session");
 
         final String videoPath = session.getCurrentVideoPath();
         Log.d(LOG_TAG, "Current video path: " + videoPath);
 
-        final String pre_play = "android.resource://" + getPackageName() + "/" + (R.raw.pre_play);
-        final String after_play = "android.resource://" + getPackageName() + "/" + (R.raw.after_play);
-
-        Uri uri_pre = Uri.parse(pre_play);
-        videoView.setVideoURI(uri_pre);
-        videoView.start();
-
-        this.initRocker();
+        final TextView fullscreenText = findViewById(R.id.fullscreenText);
+        final VideoView videoView = findViewById(R.id.videoView);
 
         final Timer loggingTimer = new java.util.Timer(true);
         final TimerTask task = new TimerTask() {
@@ -81,37 +71,35 @@ public class VideoPlayerActivity extends AppCompatActivity {
             }
         };
 
+        fullscreenText.setText(R.string.pre_text);
+        fullscreenText.setOnClickListener(v -> {
+            fullscreenText.setVisibility(View.INVISIBLE);
+
+            Uri uri = Uri.parse(videoPath);
+            videoView.setVideoURI(uri);
+            videoView.start();
+
+            loggingTimer.schedule(task, 0, 100);
+        });
+
         videoView.setOnCompletionListener(mp -> {
-            if (playbackIndex == 0) {
-                videoView.stopPlayback();
+            loggingTimer.cancel();
+            videoView.stopPlayback();
 
-                //start the video player
-                Uri uri = Uri.parse(videoPath);
-                videoView.setVideoURI(uri);
-                videoView.start();
+            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            session.writeResponsesToFile(downloadDir);
 
-                loggingTimer.schedule(task, 0, 100);
-
-                playbackIndex = 1;
-            } else if (playbackIndex == 1) {
-                loggingTimer.cancel();
-                videoView.stopPlayback();
-
-                Uri uri = Uri.parse(after_play);
-                videoView.setVideoURI(uri);
-                videoView.start();
-
-                playbackIndex = 2;
-            } else if (playbackIndex == 2) {
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                session.writeResponsesToFile(downloadDir);
-
+            fullscreenText.setText(R.string.post_text);
+            fullscreenText.setOnClickListener(v -> {
                 Intent annotationIntent = new Intent(VideoPlayerActivity.this, AnnotationActivity.class);
                 annotationIntent.putExtra("session", session);
 
                 startActivity(annotationIntent);
-            }
+            });
+            fullscreenText.setVisibility(View.VISIBLE);
         });
+
+        this.initRocker();
     }
 
     private void initRocker() {
