@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        File[] videoFiles = this.readVideoDirectory();
+        ArrayList<File> videoFiles = this.readVideoDirectory();
 
-        if (videoFiles.length == 0) {
+        if (videoFiles.isEmpty()) {
             new AlertDialog.Builder(this)
                     .setTitle("Video directory")
                     .setMessage("Place your video files into the Aro/ directory on your external storage and restart the app")
@@ -98,17 +98,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (user_name.length() == 0) {
-                Toast.makeText(MainActivity.this,"Please input your name!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Please input your name!", Toast.LENGTH_LONG).show();
             } else if (user_age.length() == 0) {
-                Toast.makeText(MainActivity.this,"Please input your age!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Please input your age!", Toast.LENGTH_LONG).show();
             } else if (user_gender.length() == 0) {
-                Toast.makeText(MainActivity.this,"Please select your gender!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Please select your gender!", Toast.LENGTH_LONG).show();
             } else {
                 UserSession session = new UserSession(
                         user_name,
                         Integer.parseInt(user_age),
                         user_gender,
-                        Arrays.stream(videoFiles).map(File::getAbsolutePath).collect(Collectors.toCollection(ArrayList::new))
+                        videoFiles.stream().map(File::getAbsolutePath).collect(Collectors.toCollection(ArrayList::new))
                 );
 
                 Intent intent = new Intent(MainActivity.this , VideoPlayerActivity.class);
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private File[] readVideoDirectory() {
+    private ArrayList<File> readVideoDirectory() {
         File storage = Environment.getExternalStorageDirectory();
         File videoDir = new File(storage, getResources().getString(R.string.app_name) + "/");
 
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Video directory does not exist");
             Log.d(LOG_TAG, "Attempting to create directory: " + videoDir.mkdirs());
 
-            return new File[] {};
+            return new ArrayList<>();
         }
 
         File[] videoFiles = videoDir.listFiles((dir, name) -> name.endsWith(".mp4"));
@@ -135,6 +135,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Video files: " + videoFiles.length);
         Arrays.sort(videoFiles);
 
-        return videoFiles;
+        return new ArrayList<>(Arrays.asList(videoFiles));
     }
 }
