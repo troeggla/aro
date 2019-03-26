@@ -52,6 +52,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         this.hideSystemUI();
     }
 
+    @Override
     public void onResume(){
         super.onResume();
 
@@ -196,6 +197,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
             moodText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
             moodText.setText(R.string.neutral);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     private void hideSystemUI() {

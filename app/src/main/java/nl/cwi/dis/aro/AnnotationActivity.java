@@ -61,4 +61,8 @@ public class AnnotationActivity extends AppCompatActivity {
             startActivity(videoIntent);
         });
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

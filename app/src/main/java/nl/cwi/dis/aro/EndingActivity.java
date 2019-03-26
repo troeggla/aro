@@ -23,4 +23,8 @@ public class EndingActivity extends AppCompatActivity {
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         session.writeResponsesToFile(downloadDir);
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }
