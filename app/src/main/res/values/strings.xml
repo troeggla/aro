@@ -30,4 +30,6 @@
     <string name="very_negative">very negative</string>
     <string name="thank_you">Thank you very much!</string>
     <string name="return_phone">Please give this phone back to the experimenter</string>
+    <string name="pre_text">You will now see a short video clip during which you are asked to annotate your emotions. Tap the screen to continue</string>
+    <string name="post_text">This is the end of the clip. Tap the screen to continue to the questionnaire to rate your overall experience</string>
 </resources>
