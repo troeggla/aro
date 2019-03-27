@@ -137,7 +137,7 @@ public class UserSession implements Parcelable {
     private void writeRockerValuesToFile(File targetDir) {
         ArrayList<String> lines = this.annotations.stream().map(a -> String.format(
                 Locale.ENGLISH,
-                "%.1f,\"%s\",%.3f,%.3f\n",
+                "%.3f,\"%s\",%.3f,%.3f\n",
                 a.getTimestamp(), a.getVideoName(), a.getArousal(), a.getValence()
         )).collect(Collectors.toCollection(ArrayList::new));
 

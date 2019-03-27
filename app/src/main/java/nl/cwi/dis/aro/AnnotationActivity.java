@@ -22,7 +22,7 @@ public class AnnotationActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         Intent intent = getIntent();
