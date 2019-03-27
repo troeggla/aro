@@ -22,7 +22,7 @@ import java.util.TimerTask;
 
 import nl.cwi.dis.aro.extras.UserSession;
 import nl.cwi.dis.aro.views.BorderFrame;
-import nl.cwi.dis.aro.views.MyRockerView;
+import nl.cwi.dis.aro.views.RockerView;
 
 public class VideoPlayerActivity extends AppCompatActivity {
     private static final String LOG_TAG = "VideoPlayerActivity";
@@ -36,7 +36,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private TextView arousal_txt;
     private TextView moodText;
     private BorderFrame borderFrame;
-    private MyRockerView mRockerViewXY;
+    private RockerView mRockerViewXY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +104,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     private void initRocker() {
-        mRockerViewXY.setOnAngleChangeListener(new MyRockerView.OnAngleChangeListener() {
+        mRockerViewXY.setOnAngleChangeListener(new RockerView.OnAngleChangeListener() {
             @Override
             public void onStart() {}
 
@@ -144,13 +144,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onFinish() {}
         });
 
-        mRockerViewXY.setOnShakeListener(MyRockerView.DirectionMode.DIRECTION_8, new MyRockerView.OnShakeListener() {
+        mRockerViewXY.setOnShakeListener(RockerView.DirectionMode.DIRECTION_8, new RockerView.OnShakeListener() {
             @Override
             public void onStart() {}
 
             @Override
-            public void direction(MyRockerView.Direction direction) {
-                if (direction == MyRockerView.Direction.DIRECTION_CENTER) {
+            public void direction(RockerView.Direction direction) {
+                if (direction == RockerView.Direction.DIRECTION_CENTER) {
                     valence = 5;
                     arousal = 5;
 

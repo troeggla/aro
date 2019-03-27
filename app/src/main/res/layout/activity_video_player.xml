@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <nl.cwi.dis.aro.views.MyRockerView
+    <nl.cwi.dis.aro.views.RockerView
         android:id="@+id/rockerXY_View"
         android:layout_width="130dp"
         android:layout_height="130dp"

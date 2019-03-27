@@ -20,9 +20,7 @@ import android.graphics.PixelFormat;
 
 import nl.cwi.dis.aro.R;
 
-public class MyRockerView extends View {
-    private static final String TAG = "RockerView";
-
+public class RockerView extends View {
     private static final int DEFAULT_SIZE = 600;
     private static final float DEFAULT_ROCKER_SCALE = 0.8f;//默认半径为背景的1/2
     private Paint mAreaBackgroundPaint;
@@ -98,7 +96,7 @@ public class MyRockerView extends View {
     private int mRockerColor;
 
 
-    public MyRockerView(Context context, AttributeSet attrs) {
+    public RockerView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // 获取自定义属性
