@@ -82,6 +82,10 @@ public class UserSession implements Parcelable {
     }
 
     public void addAnnotation(double arousal, double valence) {
+        if (this.videos.size() == 0) {
+            return;
+        }
+
         this.annotations.add(new UserAnnotation(
                 System.currentTimeMillis() / 1000.0,
                 this.videos.get(this.getVideoIndex()),
@@ -91,6 +95,10 @@ public class UserSession implements Parcelable {
     }
 
     public void addQuestionnaireResponse(double arousal, double valence) {
+        if (this.videos.size() == 0) {
+            return;
+        }
+
         this.questionnaireResponses.add(new UserAnnotation(
                 this.videos.get(this.getVideoIndex()),
                 arousal,
