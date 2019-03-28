@@ -122,6 +122,23 @@ public class UserSession implements Parcelable {
         return this.questionnaireResponses;
     }
 
+    public String getQuestionnaireFileName() {
+        return String.format(
+                Locale.ENGLISH,
+                "%s_%d_%s_questionnaire.csv",
+                this.name, this.age, this.gender
+        );
+    }
+
+    public String getValuesFileName() {
+        return String.format(
+                Locale.ENGLISH,
+                "%s_%d_%s_values.csv",
+                this.name, this.age, this.gender
+
+        );
+    }
+
     public void writeResponsesToFile(File targetDir) {
         this.writeRockerValuesToFile(targetDir);
         this.writeQuestionnaireResponsesToFile(targetDir);
@@ -135,7 +152,7 @@ public class UserSession implements Parcelable {
         )).collect(Collectors.toCollection(ArrayList::new));
 
         this.writeDataToFile(
-                String.format(Locale.ENGLISH, "%s_%d_%s_questionnaire.csv", this.name, this.age, this.gender),
+                this.getQuestionnaireFileName(),
                 targetDir,
                 "videoName,arousal,valence\n",
                 lines
@@ -150,7 +167,7 @@ public class UserSession implements Parcelable {
         )).collect(Collectors.toCollection(ArrayList::new));
 
         this.writeDataToFile(
-                String.format(Locale.ENGLISH, "%s_%d_%s_values.csv", this.name, this.age, this.gender),
+                this.getValuesFileName(),
                 targetDir,
                 "timestamp,videoName,arousal,valence\n",
                 lines
