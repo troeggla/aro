@@ -138,6 +138,30 @@ public class UserSessionTest {
     }
 
     @Test
+    public void questionnaireFileName() {
+        UserSession session = new UserSession(
+                "name",
+                100,
+                "male",
+                new ArrayList<>()
+        );
+
+        assertEquals("name_100_male_questionnaire.csv", session.getQuestionnaireFileName());
+    }
+
+    @Test
+    public void valuesFileName() {
+        UserSession session = new UserSession(
+                "name",
+                100,
+                "male",
+                new ArrayList<>()
+        );
+
+        assertEquals("name_100_male_values.csv", session.getValuesFileName());
+    }
+
+    @Test
     public void addAnnotation() {
         UserSession session = new UserSession(
                 "name",
