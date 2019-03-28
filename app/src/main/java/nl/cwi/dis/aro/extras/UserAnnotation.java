@@ -55,19 +55,19 @@ public class UserAnnotation implements Parcelable {
         dest.writeDouble(this.valence);
     }
 
-    double getTimestamp() {
+    public double getTimestamp() {
         return timestamp;
     }
 
-    double getArousal() {
+    public double getArousal() {
         return arousal;
     }
 
-    double getValence() {
+    public double getValence() {
         return valence;
     }
 
-    String getVideoName() {
+    public String getVideoName() {
         String[] path = this.videoName.split("/");
         return path[path.length - 1];
     }

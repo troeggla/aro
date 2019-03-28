@@ -114,6 +114,14 @@ public class UserSession implements Parcelable {
         this.videoIndex++;
     }
 
+    public ArrayList<UserAnnotation> getAnnotations() {
+        return this.annotations;
+    }
+
+    public ArrayList<UserAnnotation> getQuestionnaireResponses() {
+        return this.questionnaireResponses;
+    }
+
     public void writeResponsesToFile(File targetDir) {
         this.writeRockerValuesToFile(targetDir);
         this.writeQuestionnaireResponsesToFile(targetDir);
