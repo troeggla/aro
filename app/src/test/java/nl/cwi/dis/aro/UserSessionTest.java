@@ -200,4 +200,42 @@ public class UserSessionTest {
         assertEquals(7.9, response.getValence(), 0);
         assertEquals(0, response.getTimestamp(), 0);
     }
+
+    @Test
+    public void cannotAddAnnotationWithoutVideos() {
+        UserSession session = new UserSession(
+                "name",
+                100,
+                "male",
+                new ArrayList<>()
+        );
+
+        session.addAnnotation(5.0, 7.0);
+        assertEquals(0, session.getAnnotations().size());
+    }
+
+    @Test
+    public void cannotAddQuestionnaireResponseWithoutVideos() {
+        UserSession session = new UserSession(
+                "name",
+                100,
+                "male",
+                new ArrayList<>()
+        );
+
+        session.addQuestionnaireResponse(5.0, 7.0);
+        assertEquals(0, session.getQuestionnaireResponses().size());
+    }
+
+    @Test
+    public void videoPathIsNullWithoutVideos() {
+        UserSession session = new UserSession(
+                "name",
+                100,
+                "male",
+                new ArrayList<>()
+        );
+
+        assertNull(session.getCurrentVideoPath());
+    }
 }
