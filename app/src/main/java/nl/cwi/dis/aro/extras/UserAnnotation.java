@@ -21,14 +21,14 @@ public class UserAnnotation implements Parcelable {
         }
     };
 
-    UserAnnotation(double timestamp, String videoName, double arousal, double valence) {
+    public UserAnnotation(double timestamp, String videoName, double arousal, double valence) {
         this.timestamp = timestamp;
         this.videoName = videoName;
         this.arousal = arousal;
         this.valence = valence;
     }
 
-    UserAnnotation(String videoName, double arousal, double valence) {
+    public UserAnnotation(String videoName, double arousal, double valence) {
         this.timestamp = 0;
         this.videoName = videoName;
         this.arousal = arousal;
