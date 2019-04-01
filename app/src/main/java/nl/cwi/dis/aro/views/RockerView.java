@@ -43,7 +43,6 @@ public class RockerView extends View {
     private Direction tempDirection = Direction.DIRECTION_CENTER;
 
     private float lastDistance = 0;
-    private boolean hasCall = false;
     private float baseDistance = 0;
     private int mDistanceLevel = 5;//分成10分
 
@@ -95,15 +94,14 @@ public class RockerView extends View {
     private Bitmap mRockerBitmap;
     private int mRockerColor;
 
+    private Rect srcRect, dstRect;
+    private DirectionHandler directionHandler;
 
     public RockerView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // 获取自定义属性
         initAttribute(context, attrs);
-
-        if (isInEditMode()) {
-        }
 
         // 移动区域画笔
         mAreaBackgroundPaint = new Paint();
@@ -117,6 +115,9 @@ public class RockerView extends View {
         mCenterPoint = new Point();
         // 摇杆位置
         mRockerPosition = new Point();
+
+        srcRect = new Rect();
+        dstRect = new Rect();
     }
 
     /**
@@ -233,9 +234,10 @@ public class RockerView extends View {
         // 画可移动区域
         if (AREA_BACKGROUND_MODE_PIC == mAreaBackgroundMode || AREA_BACKGROUND_MODE_XML == mAreaBackgroundMode) {
             // 图片
-            Rect src = new Rect(0, 0, mAreaBitmap.getWidth(), mAreaBitmap.getHeight());
-            Rect dst = new Rect(mCenterPoint.x - mAreaRadius, mCenterPoint.y - mAreaRadius, mCenterPoint.x + mAreaRadius, mCenterPoint.y + mAreaRadius);
-            canvas.drawBitmap(mAreaBitmap, src, dst, mAreaBackgroundPaint);
+            srcRect.set(0, 0, mAreaBitmap.getWidth(), mAreaBitmap.getHeight());
+            dstRect.set(mCenterPoint.x - mAreaRadius, mCenterPoint.y - mAreaRadius, mCenterPoint.x + mAreaRadius, mCenterPoint.y + mAreaRadius);
+
+            canvas.drawBitmap(mAreaBitmap, srcRect, dstRect, mAreaBackgroundPaint);
         } else if (AREA_BACKGROUND_MODE_COLOR == mAreaBackgroundMode) {
             // 色值
             mAreaBackgroundPaint.setColor(mAreaColor);
@@ -249,9 +251,10 @@ public class RockerView extends View {
         // 画摇杆
         if (ROCKER_BACKGROUND_MODE_PIC == mRockerBackgroundMode || ROCKER_BACKGROUND_MODE_XML == mRockerBackgroundMode) {
             // 图片
-            Rect src = new Rect(0, 0, mRockerBitmap.getWidth(), mRockerBitmap.getHeight());
-            Rect dst = new Rect(mRockerPosition.x - mRockerRadius, mRockerPosition.y - mRockerRadius, mRockerPosition.x + mRockerRadius, mRockerPosition.y + mRockerRadius);
-            canvas.drawBitmap(mRockerBitmap, src, dst, mRockerPaint);
+            srcRect.set(0, 0, mRockerBitmap.getWidth(), mRockerBitmap.getHeight());
+            dstRect.set(mRockerPosition.x - mRockerRadius, mRockerPosition.y - mRockerRadius, mRockerPosition.x + mRockerRadius, mRockerPosition.y + mRockerRadius);
+
+            canvas.drawBitmap(mRockerBitmap, srcRect, dstRect, mRockerPaint);
         } else if (ROCKER_BACKGROUND_MODE_COLOR == mRockerBackgroundMode) {
             // 色值
             mRockerPaint.setColor(mRockerColor);
@@ -269,6 +272,7 @@ public class RockerView extends View {
             case MotionEvent.ACTION_DOWN:// 按下
                 // 回调 开始
                 callBackStart();
+                performClick();
             case MotionEvent.ACTION_MOVE:// 移动
                 float moveX = event.getX();
                 float moveY = event.getY();
@@ -284,11 +288,16 @@ public class RockerView extends View {
                 if (mOnShakeListener != null) {
                     mOnShakeListener.direction(Direction.DIRECTION_CENTER);
                 }
-                float upX = event.getX();
-                float upY = event.getY();
+
                 moveRocker(mCenterPoint.x, mCenterPoint.y);
                 break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
         return true;
     }
 
@@ -391,6 +400,7 @@ public class RockerView extends View {
      */
     private void callBack(double angle, float distance) {
         Log.e("distance",distance+"");
+
         if (Math.abs(distance - lastDistance) >= (baseDistance / mDistanceLevel)) {
             lastDistance = distance;
             if (null != mOnDistanceLevelListener) {
@@ -608,17 +618,6 @@ public class RockerView extends View {
         CALL_BACK_MODE_MOVE,
         // 只有状态变化的时候才回调
         CALL_BACK_MODE_STATE_CHANGE,
-        //只有状态变化或者距离变化的时候才回调
-        CALL_BACK_MODE_STATE_DISTANCE_CHANGE
-    }
-
-    /**
-     * 设置回调模式
-     *
-     * @param mode 回调模式
-     */
-    public void setCallBackMode(CallBackMode mode) {
-        mCallBackMode = mode;
     }
 
     /**
@@ -670,8 +669,8 @@ public class RockerView extends View {
     /**
      * 添加摇动的距离变化
      */
-    public void setOnDistanceLevelListener(OnDistanceLevelListener listenr) {
-        mOnDistanceLevelListener = listenr;
+    public void setOnDistanceLevelListener(OnDistanceLevelListener listener) {
+        mOnDistanceLevelListener = listener;
     }
 
     /**

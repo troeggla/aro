@@ -26,7 +26,7 @@ import nl.cwi.dis.aro.extras.UserSession;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MainActivity";
-    private static final int STORAGE_PERMISSION_REQUEST = 44;
+    private static final int STORAGE_PERMISSION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
