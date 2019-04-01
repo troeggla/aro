@@ -19,6 +19,12 @@ import android.util.Log;
 import android.graphics.PixelFormat;
 
 import nl.cwi.dis.aro.R;
+import nl.cwi.dis.aro.views.directionhandlers.DiagonalFourWayDirectionHandler;
+import nl.cwi.dis.aro.views.directionhandlers.DirectionHandler;
+import nl.cwi.dis.aro.views.directionhandlers.EightWayDirectionHandler;
+import nl.cwi.dis.aro.views.directionhandlers.FourWayDirectionHandler;
+import nl.cwi.dis.aro.views.directionhandlers.HorizontalDirectionHandler;
+import nl.cwi.dis.aro.views.directionhandlers.VerticalDirectionHandler;
 
 public class RockerView extends View {
     private static final int DEFAULT_SIZE = 600;
@@ -662,8 +668,25 @@ public class RockerView extends View {
      * @param listener      回调
      */
     public void setOnShakeListener(DirectionMode directionMode, OnShakeListener listener) {
-        mDirectionMode = directionMode;
         mOnShakeListener = listener;
+
+        switch (directionMode) {
+            case DIRECTION_2_HORIZONTAL:
+                directionHandler = new HorizontalDirectionHandler();
+                break;
+            case DIRECTION_2_VERTICAL:
+                directionHandler = new VerticalDirectionHandler();
+                break;
+            case DIRECTION_4_ROTATE_0:
+                directionHandler = new DiagonalFourWayDirectionHandler();
+                break;
+            case DIRECTION_4_ROTATE_45:
+                directionHandler = new FourWayDirectionHandler();
+                break;
+            case DIRECTION_8:
+                directionHandler = new EightWayDirectionHandler();
+                break;
+        }
     }
 
     /**
