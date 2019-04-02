@@ -37,4 +37,9 @@ public class HorizontalDirectionHandler implements DirectionHandler {
         prevDirection = newDirection;
         return newDirection;
     }
+
+    @Override
+    public void reset() {
+        prevDirection = Direction.DIRECTION_CENTER;
+    }
 }

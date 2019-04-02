@@ -45,8 +45,6 @@ public class RockerView extends View {
     private OnShakeListener mOnShakeListener;
     private OnDistanceLevelListener mOnDistanceLevelListener;
 
-    private Direction tempDirection = Direction.DIRECTION_CENTER;
-
     private float lastDistance = 0;
     private float baseDistance = 0;
     private int mDistanceLevel = 5;//分成10分
@@ -357,7 +355,7 @@ public class RockerView extends View {
      * 开始
      */
     private void callBackStart() {
-        tempDirection = Direction.DIRECTION_CENTER;
+        directionHandler.reset();
 
         if (null != mOnAngleChangeListener) {
             mOnAngleChangeListener.onStart();
@@ -413,7 +411,8 @@ public class RockerView extends View {
      * 结束
      */
     private void callBackFinish() {
-        tempDirection = Direction.DIRECTION_CENTER;
+        directionHandler.reset();
+
         if (null != mOnAngleChangeListener) {
             mOnAngleChangeListener.onFinish();
         }

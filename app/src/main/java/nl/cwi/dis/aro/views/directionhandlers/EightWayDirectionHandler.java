@@ -67,4 +67,9 @@ public class EightWayDirectionHandler implements DirectionHandler {
 
         return Direction.DIRECTION_CENTER;
     }
+
+    @Override
+    public void reset() {
+        prevDirection = Direction.DIRECTION_CENTER;
+    }
 }
