@@ -374,9 +374,7 @@ public class RockerView extends View {
     }
 
     private void handleStateChangeCallback(double angle) {
-        Direction direction = directionHandler.getStateChangeDirection(angle, tempDirection);
-
-        tempDirection = direction;
+        Direction direction = directionHandler.getStateChangeDirection(angle);
         mOnShakeListener.direction(direction);
     }
 

@@ -8,6 +8,8 @@ public class VerticalDirectionHandler implements DirectionHandler {
     private static final double ANGLE_VERTICAL_2D_OF_0P = 0;
     private static final double ANGLE_VERTICAL_2D_OF_1P = 180;
 
+    private Direction prevDirection;
+
     @Override
     public Direction getMoveDirection(double angle) {
         if (ANGLE_VERTICAL_2D_OF_0P <= angle && ANGLE_VERTICAL_2D_OF_1P > angle) {
@@ -20,13 +22,18 @@ public class VerticalDirectionHandler implements DirectionHandler {
     }
 
     @Override
-    public Direction getStateChangeDirection(double angle, Direction prevDirection) {
+    public Direction getStateChangeDirection(double angle) {
+        Direction newDirection;
+
         if (ANGLE_VERTICAL_2D_OF_0P <= angle && ANGLE_VERTICAL_2D_OF_1P > angle && prevDirection != Direction.DIRECTION_DOWN) {
-            return Direction.DIRECTION_DOWN;
+            newDirection =  Direction.DIRECTION_DOWN;
         } else if (ANGLE_VERTICAL_2D_OF_1P <= angle && ANGLE_360 > angle && prevDirection != Direction.DIRECTION_UP) {
-            return Direction.DIRECTION_UP;
+            newDirection =  Direction.DIRECTION_UP;
+        } else {
+            newDirection = Direction.DIRECTION_CENTER;
         }
 
-        return Direction.DIRECTION_CENTER;
+        prevDirection = newDirection;
+        return newDirection;
     }
 }

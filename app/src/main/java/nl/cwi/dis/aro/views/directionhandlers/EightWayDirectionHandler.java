@@ -15,27 +15,34 @@ public class EightWayDirectionHandler implements DirectionHandler {
     private static final double ANGLE_8D_OF_6P = 292.5;
     private static final double ANGLE_8D_OF_7P = 337.5;
 
+    private Direction prevDirection = Direction.DIRECTION_CENTER;
+
     @Override
-    public Direction getStateChangeDirection(double angle, Direction prevDirection) {
+    public Direction getStateChangeDirection(double angle) {
+        Direction newDirection;
+
         if ((ANGLE_0 <= angle && ANGLE_8D_OF_0P > angle || ANGLE_8D_OF_7P <= angle && ANGLE_360 > angle) && prevDirection != Direction.DIRECTION_RIGHT) {
-            return Direction.DIRECTION_RIGHT;
+            newDirection = Direction.DIRECTION_RIGHT;
         } else if (ANGLE_8D_OF_0P <= angle && ANGLE_8D_OF_1P > angle && prevDirection != Direction.DIRECTION_DOWN_RIGHT) {
-            return Direction.DIRECTION_DOWN_RIGHT;
+            newDirection = Direction.DIRECTION_DOWN_RIGHT;
         } else if (ANGLE_8D_OF_1P <= angle && ANGLE_8D_OF_2P > angle && prevDirection != Direction.DIRECTION_DOWN) {
-            return Direction.DIRECTION_DOWN;
+            newDirection = Direction.DIRECTION_DOWN;
         } else if (ANGLE_8D_OF_2P <= angle && ANGLE_8D_OF_3P > angle && prevDirection != Direction.DIRECTION_DOWN_LEFT) {
-            return Direction.DIRECTION_DOWN_LEFT;
+            newDirection = Direction.DIRECTION_DOWN_LEFT;
         } else if (ANGLE_8D_OF_3P <= angle && ANGLE_8D_OF_4P > angle && prevDirection != Direction.DIRECTION_LEFT) {
-            return Direction.DIRECTION_LEFT;
+            newDirection = Direction.DIRECTION_LEFT;
         } else if (ANGLE_8D_OF_4P <= angle && ANGLE_8D_OF_5P > angle && prevDirection != Direction.DIRECTION_UP_LEFT) {
-            return Direction.DIRECTION_UP_LEFT;
+            newDirection = Direction.DIRECTION_UP_LEFT;
         } else if (ANGLE_8D_OF_5P <= angle && ANGLE_8D_OF_6P > angle && prevDirection != Direction.DIRECTION_UP) {
-            return Direction.DIRECTION_UP;
+            newDirection = Direction.DIRECTION_UP;
         } else if (ANGLE_8D_OF_6P <= angle && ANGLE_8D_OF_7P > angle && prevDirection != Direction.DIRECTION_UP_RIGHT) {
-            return Direction.DIRECTION_UP_RIGHT;
+            newDirection = Direction.DIRECTION_UP_RIGHT;
+        } else {
+            newDirection = Direction.DIRECTION_CENTER;
         }
 
-        return Direction.DIRECTION_CENTER;
+        prevDirection = newDirection;
+        return newDirection;
     }
 
     @Override

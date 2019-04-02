@@ -10,6 +10,8 @@ public class DiagonalFourWayDirectionHandler implements DirectionHandler {
     private static final double ANGLE_4D_OF_2P = 180;
     private static final double ANGLE_4D_OF_3P = 270;
 
+    private Direction prevDirection;
+
     @Override
     public Direction getMoveDirection(double angle) {
         if (ANGLE_4D_OF_0P <= angle && ANGLE_4D_OF_1P > angle) {
@@ -26,17 +28,22 @@ public class DiagonalFourWayDirectionHandler implements DirectionHandler {
     }
 
     @Override
-    public Direction getStateChangeDirection(double angle, Direction prevDirection) {
+    public Direction getStateChangeDirection(double angle) {
+        Direction newDirection;
+
         if (ANGLE_4D_OF_0P <= angle && ANGLE_4D_OF_1P > angle && prevDirection != Direction.DIRECTION_DOWN_RIGHT) {
-            return Direction.DIRECTION_DOWN_RIGHT;
+            newDirection = Direction.DIRECTION_DOWN_RIGHT;
         } else if (ANGLE_4D_OF_1P <= angle && ANGLE_4D_OF_2P > angle && prevDirection != Direction.DIRECTION_DOWN_LEFT) {
-            return Direction.DIRECTION_DOWN_LEFT;
+            newDirection = Direction.DIRECTION_DOWN_LEFT;
         } else if (ANGLE_4D_OF_2P <= angle && ANGLE_4D_OF_3P > angle && prevDirection != Direction.DIRECTION_UP_LEFT) {
-            return Direction.DIRECTION_UP_LEFT;
+            newDirection = Direction.DIRECTION_UP_LEFT;
         } else if (ANGLE_4D_OF_3P <= angle && ANGLE_360 > angle && prevDirection != Direction.DIRECTION_UP_RIGHT) {
-            return Direction.DIRECTION_UP_RIGHT;
+            newDirection = Direction.DIRECTION_UP_RIGHT;
+        } else {
+            newDirection = Direction.DIRECTION_CENTER;
         }
 
-        return Direction.DIRECTION_CENTER;
+        prevDirection = newDirection;
+        return newDirection;
     }
 }
