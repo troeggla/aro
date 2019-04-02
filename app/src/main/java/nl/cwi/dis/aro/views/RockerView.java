@@ -103,7 +103,7 @@ public class RockerView extends View {
 
         // 可移动区域背景
         Drawable areaBackground = typedArray.getDrawable(R.styleable.RockerView_areaBackground);
-        if (null != areaBackground) {
+        if (areaBackground != null) {
             // 设置了背景
             if (areaBackground instanceof BitmapDrawable) {
                 // 设置了一张图片
@@ -125,9 +125,10 @@ public class RockerView extends View {
             // 没有设置背景
             mAreaBackgroundMode = AREA_BACKGROUND_MODE_DEFAULT;
         }
+
         // 摇杆背景
         Drawable rockerBackground = typedArray.getDrawable(R.styleable.RockerView_rockerBackground);
-        if (null != rockerBackground) {
+        if (rockerBackground != null) {
             // 设置了摇杆背景
             if (rockerBackground instanceof BitmapDrawable) {
                 // 图片
@@ -175,11 +176,13 @@ public class RockerView extends View {
             // wrap_content
             measureWidth = DEFAULT_SIZE;
         }
+
         if (heightMode == MeasureSpec.EXACTLY) {
             measureHeight = heightSize;
         } else {
             measureHeight = DEFAULT_SIZE;
         }
+
         setMeasuredDimension(measureWidth, measureHeight);
     }
 
@@ -199,18 +202,18 @@ public class RockerView extends View {
         mAreaRadius = (measuredWidth <= measuredHeight) ? (int) (cx / (mRockerScale + 1)) : (int) (cy / (mRockerScale + 1));
         mRockerRadius = (int) (mAreaRadius * mRockerScale);
         // 摇杆位置
-        if (0 == mRockerPosition.x || 0 == mRockerPosition.y) {
+        if (mRockerPosition.x == 0 || mRockerPosition.y == 0) {
             mRockerPosition.set(mCenterPoint.x, mCenterPoint.y);
         }
 
         // 画可移动区域
-        if (AREA_BACKGROUND_MODE_PIC == mAreaBackgroundMode || AREA_BACKGROUND_MODE_XML == mAreaBackgroundMode) {
+        if (mAreaBackgroundMode == AREA_BACKGROUND_MODE_PIC || mAreaBackgroundMode == AREA_BACKGROUND_MODE_XML) {
             // 图片
             srcRect.set(0, 0, mAreaBitmap.getWidth(), mAreaBitmap.getHeight());
             dstRect.set(mCenterPoint.x - mAreaRadius, mCenterPoint.y - mAreaRadius, mCenterPoint.x + mAreaRadius, mCenterPoint.y + mAreaRadius);
 
             canvas.drawBitmap(mAreaBitmap, srcRect, dstRect, mAreaBackgroundPaint);
-        } else if (AREA_BACKGROUND_MODE_COLOR == mAreaBackgroundMode) {
+        } else if (mAreaBackgroundMode == AREA_BACKGROUND_MODE_COLOR) {
             // 色值
             mAreaBackgroundPaint.setColor(mAreaColor);
             canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mAreaRadius, mAreaBackgroundPaint);
@@ -221,13 +224,13 @@ public class RockerView extends View {
         }
 
         // 画摇杆
-        if (ROCKER_BACKGROUND_MODE_PIC == mRockerBackgroundMode || ROCKER_BACKGROUND_MODE_XML == mRockerBackgroundMode) {
+        if (mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_PIC || mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_XML ) {
             // 图片
             srcRect.set(0, 0, mRockerBitmap.getWidth(), mRockerBitmap.getHeight());
             dstRect.set(mRockerPosition.x - mRockerRadius, mRockerPosition.y - mRockerRadius, mRockerPosition.x + mRockerRadius, mRockerPosition.y + mRockerRadius);
 
             canvas.drawBitmap(mRockerBitmap, srcRect, dstRect, mRockerPaint);
-        } else if (ROCKER_BACKGROUND_MODE_COLOR == mRockerBackgroundMode) {
+        } else if (mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_COLOR) {
             // 色值
             mRockerPaint.setColor(mRockerColor);
             canvas.drawCircle(mRockerPosition.x, mRockerPosition.y, mRockerRadius, mRockerPaint);
@@ -340,13 +343,16 @@ public class RockerView extends View {
         // 取 drawable 的长宽
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
+
         // 取 drawable 的颜色格式
         Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
         // 建立对应 bitmap
         Bitmap bitmap = Bitmap.createBitmap(width, height, config);
         Canvas canvas = new Canvas(bitmap);
+
         drawable.setBounds(0, 0, width, height);
         drawable.draw(canvas);
+
         return bitmap;
     }
 
@@ -357,11 +363,11 @@ public class RockerView extends View {
     private void callBackStart() {
         directionHandler.reset();
 
-        if (null != mOnAngleChangeListener) {
+        if (mOnAngleChangeListener != null) {
             mOnAngleChangeListener.onStart();
         }
 
-        if (null != mOnShakeListener) {
+        if (mOnShakeListener != null) {
             mOnShakeListener.onStart();
         }
     }
@@ -393,11 +399,11 @@ public class RockerView extends View {
             }
         }
 
-        if (null != mOnAngleChangeListener) {
+        if (mOnAngleChangeListener != null) {
             mOnAngleChangeListener.angle(angle);
         }
 
-        if (null != mOnShakeListener) {
+        if (mOnShakeListener != null) {
             if (CallBackMode.CALL_BACK_MODE_MOVE == mCallBackMode) {
                 this.handleMoveCallback(angle);
             } else if (CallBackMode.CALL_BACK_MODE_STATE_CHANGE == mCallBackMode) {
@@ -413,10 +419,10 @@ public class RockerView extends View {
     private void callBackFinish() {
         directionHandler.reset();
 
-        if (null != mOnAngleChangeListener) {
+        if (mOnAngleChangeListener != null) {
             mOnAngleChangeListener.onFinish();
         }
-        if (null != mOnShakeListener) {
+        if (mOnShakeListener != null) {
             mOnShakeListener.onFinish();
         }
     }
@@ -552,6 +558,7 @@ public class RockerView extends View {
             case 1:
                 return CallBackMode.CALL_BACK_MODE_STATE_CHANGE;
         }
+
         return mCallBackMode;
     }
 }
