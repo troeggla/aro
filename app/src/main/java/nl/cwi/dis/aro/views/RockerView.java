@@ -27,6 +27,8 @@ import nl.cwi.dis.aro.views.directionhandlers.HorizontalDirectionHandler;
 import nl.cwi.dis.aro.views.directionhandlers.VerticalDirectionHandler;
 
 public class RockerView extends View {
+    public static final String LOG_TAG = "RockerView";
+
     public enum CallBackMode {
         CALL_BACK_MODE_MOVE,
         CALL_BACK_MODE_STATE_CHANGE,
@@ -234,7 +236,7 @@ public class RockerView extends View {
             canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mAreaRadius, mAreaBackgroundPaint);
         }
 
-        if (mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_PIC || mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_XML ) {
+        if (mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_PIC || mRockerBackgroundMode == ROCKER_BACKGROUND_MODE_XML) {
             srcRect.set(0, 0, mRockerBitmap.getWidth(), mRockerBitmap.getHeight());
             dstRect.set(mRockerPosition.x - mRockerRadius, mRockerPosition.y - mRockerRadius, mRockerPosition.x + mRockerRadius, mRockerPosition.y + mRockerRadius);
 
@@ -258,8 +260,8 @@ public class RockerView extends View {
                 float moveX = event.getX();
                 float moveY = event.getY();
 
-                baseDistance = mAreaRadius+2;
-                Log.e("baseDistance",baseDistance+"");
+                baseDistance = mAreaRadius + 2;
+                Log.d(LOG_TAG,"BaseDistance: " + baseDistance);
 
                 mRockerPosition = getRockerPositionPoint(mCenterPoint, new Point((int) moveX, (int) moveY), mAreaRadius + mRockerRadius, mRockerRadius);
                 moveRocker(mRockerPosition.x, mRockerPosition.y);
@@ -320,7 +322,7 @@ public class RockerView extends View {
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
 
-        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+        Bitmap.Config config = (drawable.getOpacity() != PixelFormat.OPAQUE) ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
         Bitmap bitmap = Bitmap.createBitmap(width, height, config);
         Canvas canvas = new Canvas(bitmap);
 
@@ -353,12 +355,13 @@ public class RockerView extends View {
     }
 
     private void callBack(double angle, float distance) {
-        Log.e("distance",distance+"");
+        Log.d(LOG_TAG,"Distance: " + distance);
 
         if (Math.abs(distance - lastDistance) >= (baseDistance / mDistanceLevel)) {
             lastDistance = distance;
+
             if (mOnDistanceLevelListener != null) {
-                int level = (int) (distance/(baseDistance/mDistanceLevel));
+                int level = (int) (distance / (baseDistance / mDistanceLevel));
                 mOnDistanceLevelListener.onDistanceLevel(level);
             }
         }
