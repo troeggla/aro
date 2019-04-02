@@ -109,7 +109,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onStart() {}
 
             @Override
-            public void angle(double angle_) {
+            public void onAngleChanged(double angle_) {
                 angle = Math.toRadians(angle_);
                 valence = level * Math.cos(angle) + 5;
                 arousal = -level * Math.sin(angle) + 5;
@@ -149,7 +149,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onStart() {}
 
             @Override
-            public void direction(RockerView.Direction direction) {
+            public void onDirectionChanged(RockerView.Direction direction) {
                 if (direction == RockerView.Direction.DIRECTION_CENTER) {
                     valence = 5;
                     arousal = 5;

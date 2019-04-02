@@ -261,7 +261,7 @@ public class RockerView extends View {
                 // 回调 结束
                 callBackFinish();
                 if (mOnShakeListener != null) {
-                    mOnShakeListener.direction(Direction.DIRECTION_CENTER);
+                    mOnShakeListener.onDirectionChanged(Direction.DIRECTION_CENTER);
                 }
 
                 moveRocker(mCenterPoint.x, mCenterPoint.y);
@@ -374,12 +374,12 @@ public class RockerView extends View {
 
     private void handleMoveCallback(double angle) {
         Direction direction = directionHandler.getMoveDirection(angle);
-        mOnShakeListener.direction(direction);
+        mOnShakeListener.onDirectionChanged(direction);
     }
 
     private void handleStateChangeCallback(double angle) {
         Direction direction = directionHandler.getStateChangeDirection(angle);
-        mOnShakeListener.direction(direction);
+        mOnShakeListener.onDirectionChanged(direction);
     }
 
     /**
@@ -400,7 +400,7 @@ public class RockerView extends View {
         }
 
         if (mOnAngleChangeListener != null) {
-            mOnAngleChangeListener.angle(angle);
+            mOnAngleChangeListener.onAngleChanged(angle);
         }
 
         if (mOnShakeListener != null) {
@@ -513,41 +513,17 @@ public class RockerView extends View {
     public interface OnShakeListener {
         // 开始
         void onStart();
-
-        /**
-         * 摇动方向
-         *
-         * @param direction 方向
-         */
-        void direction(Direction direction);
-
-        // 结束
+        void onDirectionChanged(Direction direction);
         void onFinish();
     }
 
-    /**
-     * 摇动角度的监听接口
-     */
     public interface OnAngleChangeListener {
-        // 开始
         void onStart();
-
-        /**
-         * 摇杆角度变化
-         *
-         * @param angle 角度[0,360)
-         */
-        void angle(double angle);
-
-        // 结束
+        void onAngleChanged(double angle);
         void onFinish();
     }
 
-    /**
-     * 摇动距离
-     */
     public interface OnDistanceLevelListener {
-
         void onDistanceLevel(int level);
     }
 
