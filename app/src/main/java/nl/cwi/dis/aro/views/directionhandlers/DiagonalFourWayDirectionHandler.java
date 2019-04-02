@@ -29,22 +29,17 @@ public class DiagonalFourWayDirectionHandler implements DirectionHandler {
 
     @Override
     public Direction getStateChangeDirection(double angle) {
-        Direction newDirection;
-
         if (ANGLE_4D_OF_0P <= angle && ANGLE_4D_OF_1P > angle && prevDirection != Direction.DIRECTION_DOWN_RIGHT) {
-            newDirection = Direction.DIRECTION_DOWN_RIGHT;
+            prevDirection = Direction.DIRECTION_DOWN_RIGHT;
         } else if (ANGLE_4D_OF_1P <= angle && ANGLE_4D_OF_2P > angle && prevDirection != Direction.DIRECTION_DOWN_LEFT) {
-            newDirection = Direction.DIRECTION_DOWN_LEFT;
+            prevDirection = Direction.DIRECTION_DOWN_LEFT;
         } else if (ANGLE_4D_OF_2P <= angle && ANGLE_4D_OF_3P > angle && prevDirection != Direction.DIRECTION_UP_LEFT) {
-            newDirection = Direction.DIRECTION_UP_LEFT;
+            prevDirection = Direction.DIRECTION_UP_LEFT;
         } else if (ANGLE_4D_OF_3P <= angle && ANGLE_360 > angle && prevDirection != Direction.DIRECTION_UP_RIGHT) {
-            newDirection = Direction.DIRECTION_UP_RIGHT;
-        } else {
-            newDirection = Direction.DIRECTION_CENTER;
+            prevDirection = Direction.DIRECTION_UP_RIGHT;
         }
 
-        prevDirection = newDirection;
-        return newDirection;
+        return prevDirection;
     }
 
     @Override

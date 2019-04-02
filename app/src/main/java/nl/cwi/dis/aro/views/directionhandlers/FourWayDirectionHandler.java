@@ -30,22 +30,17 @@ public class FourWayDirectionHandler implements DirectionHandler {
 
     @Override
     public Direction getStateChangeDirection(double angle) {
-        Direction newDirection;
-
         if ((ANGLE_0 <= angle && ANGLE_ROTATE45_4D_OF_0P > angle || ANGLE_ROTATE45_4D_OF_3P <= angle && ANGLE_360 > angle) && prevDirection != Direction.DIRECTION_RIGHT) {
-            newDirection = Direction.DIRECTION_RIGHT;
+            prevDirection = Direction.DIRECTION_RIGHT;
         } else if (ANGLE_ROTATE45_4D_OF_0P <= angle && ANGLE_ROTATE45_4D_OF_1P > angle && prevDirection != Direction.DIRECTION_DOWN) {
-            newDirection = Direction.DIRECTION_DOWN;
+            prevDirection = Direction.DIRECTION_DOWN;
         } else if (ANGLE_ROTATE45_4D_OF_1P <= angle && ANGLE_ROTATE45_4D_OF_2P > angle && prevDirection != Direction.DIRECTION_LEFT) {
-            newDirection = Direction.DIRECTION_LEFT;
+            prevDirection = Direction.DIRECTION_LEFT;
         } else if (ANGLE_ROTATE45_4D_OF_2P <= angle && ANGLE_ROTATE45_4D_OF_3P > angle && prevDirection != Direction.DIRECTION_UP) {
-            newDirection = Direction.DIRECTION_UP;
-        } else {
-            newDirection = Direction.DIRECTION_CENTER;
+            prevDirection = Direction.DIRECTION_UP;
         }
 
-        prevDirection = newDirection;
-        return newDirection;
+        return prevDirection;
     }
 
     @Override

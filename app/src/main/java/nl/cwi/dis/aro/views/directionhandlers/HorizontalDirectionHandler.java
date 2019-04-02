@@ -24,18 +24,13 @@ public class HorizontalDirectionHandler implements DirectionHandler {
 
     @Override
     public Direction getStateChangeDirection(double angle) {
-        Direction newDirection;
-
         if ((ANGLE_0 <= angle && ANGLE_HORIZONTAL_2D_OF_0P > angle || ANGLE_HORIZONTAL_2D_OF_1P <= angle && ANGLE_360 > angle) && prevDirection != Direction.DIRECTION_RIGHT) {
-            newDirection = Direction.DIRECTION_RIGHT;
+            prevDirection = Direction.DIRECTION_RIGHT;
         } else if (ANGLE_HORIZONTAL_2D_OF_0P <= angle && ANGLE_HORIZONTAL_2D_OF_1P > angle && prevDirection != Direction.DIRECTION_LEFT) {
-            newDirection = Direction.DIRECTION_LEFT;
-        } else {
-            newDirection = Direction.DIRECTION_CENTER;
+            prevDirection = Direction.DIRECTION_LEFT;
         }
 
-        prevDirection = newDirection;
-        return newDirection;
+        return prevDirection;
     }
 
     @Override
