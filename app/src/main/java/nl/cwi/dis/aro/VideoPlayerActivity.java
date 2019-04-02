@@ -144,7 +144,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onFinish() {}
         });
 
-        mRockerViewXY.setOnShakeListener(RockerView.DirectionMode.DIRECTION_8, new RockerView.OnShakeListener() {
+        mRockerViewXY.setOnDirectionChangeListener(RockerView.DirectionMode.DIRECTION_8, new RockerView.OnDirectionChangeListener() {
             @Override
             public void onStart() {}
 

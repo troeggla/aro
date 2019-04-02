@@ -42,7 +42,7 @@ public class RockerView extends View {
 
     private CallBackMode mCallBackMode = CallBackMode.CALL_BACK_MODE_MOVE;
     private OnAngleChangeListener mOnAngleChangeListener;
-    private OnShakeListener mOnShakeListener;
+    private OnDirectionChangeListener mOnDirectionChangeListener;
     private OnDistanceLevelListener mOnDistanceLevelListener;
 
     private float lastDistance = 0;
@@ -260,8 +260,8 @@ public class RockerView extends View {
             case MotionEvent.ACTION_CANCEL:// 移出区域
                 // 回调 结束
                 callBackFinish();
-                if (mOnShakeListener != null) {
-                    mOnShakeListener.onDirectionChanged(Direction.DIRECTION_CENTER);
+                if (mOnDirectionChangeListener != null) {
+                    mOnDirectionChangeListener.onDirectionChanged(Direction.DIRECTION_CENTER);
                 }
 
                 moveRocker(mCenterPoint.x, mCenterPoint.y);
@@ -367,19 +367,19 @@ public class RockerView extends View {
             mOnAngleChangeListener.onStart();
         }
 
-        if (mOnShakeListener != null) {
-            mOnShakeListener.onStart();
+        if (mOnDirectionChangeListener != null) {
+            mOnDirectionChangeListener.onStart();
         }
     }
 
     private void handleMoveCallback(double angle) {
         Direction direction = directionHandler.getMoveDirection(angle);
-        mOnShakeListener.onDirectionChanged(direction);
+        mOnDirectionChangeListener.onDirectionChanged(direction);
     }
 
     private void handleStateChangeCallback(double angle) {
         Direction direction = directionHandler.getStateChangeDirection(angle);
-        mOnShakeListener.onDirectionChanged(direction);
+        mOnDirectionChangeListener.onDirectionChanged(direction);
     }
 
     /**
@@ -403,7 +403,7 @@ public class RockerView extends View {
             mOnAngleChangeListener.onAngleChanged(angle);
         }
 
-        if (mOnShakeListener != null) {
+        if (mOnDirectionChangeListener != null) {
             if (CallBackMode.CALL_BACK_MODE_MOVE == mCallBackMode) {
                 this.handleMoveCallback(angle);
             } else if (CallBackMode.CALL_BACK_MODE_STATE_CHANGE == mCallBackMode) {
@@ -422,8 +422,9 @@ public class RockerView extends View {
         if (mOnAngleChangeListener != null) {
             mOnAngleChangeListener.onFinish();
         }
-        if (mOnShakeListener != null) {
-            mOnShakeListener.onFinish();
+
+        if (mOnDirectionChangeListener != null) {
+            mOnDirectionChangeListener.onFinish();
         }
     }
 
@@ -478,8 +479,8 @@ public class RockerView extends View {
      * @param directionMode 监听的方向
      * @param listener      回调
      */
-    public void setOnShakeListener(DirectionMode directionMode, OnShakeListener listener) {
-        mOnShakeListener = listener;
+    public void setOnDirectionChangeListener(DirectionMode directionMode, OnDirectionChangeListener listener) {
+        mOnDirectionChangeListener = listener;
 
         switch (directionMode) {
             case DIRECTION_2_HORIZONTAL:
@@ -507,11 +508,7 @@ public class RockerView extends View {
         mOnDistanceLevelListener = listener;
     }
 
-    /**
-     * 摇动方向监听接口
-     */
-    public interface OnShakeListener {
-        // 开始
+    public interface OnDirectionChangeListener {
         void onStart();
         void onDirectionChanged(Direction direction);
         void onFinish();
